@@ -1,3 +1,8 @@
+# Intro
+
+An API project, to use the https://www.coindesk.com/coindesk-api and generate useful insight for crypto coins and my personal portfolios.
+\n
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
