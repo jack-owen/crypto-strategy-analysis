@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 // import Contacts from "./components/contacts.js";
+import Calculation from "./components/calculator.js";
 
 class App extends Component {
   constructor(props) {
@@ -15,6 +16,9 @@ class App extends Component {
     this.state = {
       contacts: [],
     };
+    this.state = {
+      historic_bpi_usd: [],
+    };
   }
 
   componentDidMount() {
@@ -27,6 +31,7 @@ class App extends Component {
             gbp: result.bpi.GBP.rate,
             usd: result.bpi.USD.rate,
             datetime: result.time.updateduk,
+            disclaimer: result.disclaimer,
           });
         },
         (error) => {
@@ -43,6 +48,34 @@ class App extends Component {
         this.setState({ contacts: data });
       })
       .catch(console.log);
+
+    for (let i = 1; i <= 12; i++) {
+      let mm;
+      i.toString().length === 1 ? (mm = "0" + i) : (mm = i); //add leading 0 for single digit values
+      fetch(
+        "https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-" +
+          mm +
+          "-01&end=2018-" +
+          mm +
+          "-01"
+      )
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            let updatedArr = this.state.historic_bpi_usd.concat(result.bpi);
+            this.setState({
+              isLoaded: true,
+              historic_bpi_usd: updatedArr,
+            });
+          },
+          (error) => {
+            this.setState({
+              isLoaded: true,
+              error,
+            });
+          }
+        );
+    }
   }
 
   Currency({ currency = "null", amount = "null" }) {
@@ -57,13 +90,43 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">Crypto Portfolio Tracker</header>
-        <div className="App-container">
+        <header className="header">Crypto Portfolio Tracker</header>
+        <div className="container">
           <div className="datetime">{this.state.datetime}</div>
           <this.Currency currency="gbp" amount={this.state.gbp}></this.Currency>
           <this.Currency currency="usd" amount={this.state.usd}></this.Currency>
+          <div className="historic-bpi">
+            <table>
+              <thead>
+                <tr>
+                  <th>$</th>
+                  <th>date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.historic_bpi_usd.map((item) => (
+                  <tr key={Object.keys(item)}>
+                    <td>
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(Object.values(item))}
+                    </td>
+                    <td>{Object.keys(item)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* Calculations */}
+            <Calculation
+              historic_bpi_usd={this.state.historic_bpi_usd}
+            ></Calculation>
+          </div>
         </div>
-        {/* <Contacts contactss={this.state.contacts} foaas="sss" /> */}
+        {/* <Contacts contacts={this.state.contacts} foaas="sss" /> */}
+        <div className="footer">
+          <div className="bpi-disclaimer">{this.state.disclaimer}</div>
+        </div>
       </div>
     );
   }
