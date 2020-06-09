@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 // import Contacts from "./components/contacts.js";
 import Calculation from "./components/calculator.js";
+import InputForm from "./components/searchInputForm.js";
 
 class App extends Component {
   constructor(props) {
@@ -12,13 +13,11 @@ class App extends Component {
       gbp: null,
       usd: null,
       datetime: null,
-    };
-    this.state = {
       contacts: [],
-    };
-    this.state = {
       historic_bpi_usd: [],
+      investmentPerMonth: 311,
     };
+    this.updateInvestmentPerMonth = this.updateInvestmentPerMonth.bind(this);
   }
 
   componentDidMount() {
@@ -78,12 +77,50 @@ class App extends Component {
     }
   }
 
+  updateInvestmentPerMonth(props) {
+    if (isNaN(parseInt(props))) {
+      this.setState({
+        investmentPerMonth: 0,
+      });
+    } else {
+      this.setState({
+        investmentPerMonth: parseInt(props),
+      });
+    }
+  }
+
   Currency({ currency = "null", amount = "null" }) {
     return (
       <div className={currency} style={!currency ? { color: "red" } : {}}>
         {currency}: {currency === "gbp" ? "£" : "$"}
         {amount ? amount : "error"}
       </div>
+    );
+  }
+
+  RecentBPItable({ input }) {
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>$</th>
+            <th>date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {input.map((item) => (
+            <tr key={Object.keys(item)}>
+              <td>
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Object.values(item))}
+              </td>
+              <td>{Object.keys(item)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
   }
 
@@ -95,32 +132,18 @@ class App extends Component {
           <div className="datetime">{this.state.datetime}</div>
           <this.Currency currency="gbp" amount={this.state.gbp}></this.Currency>
           <this.Currency currency="usd" amount={this.state.usd}></this.Currency>
-          <div className="historic-bpi">
-            <table>
-              <thead>
-                <tr>
-                  <th>$</th>
-                  <th>date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.historic_bpi_usd.map((item) => (
-                  <tr key={Object.keys(item)}>
-                    <td>
-                      {new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      }).format(Object.values(item))}
-                    </td>
-                    <td>{Object.keys(item)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {/* Calculations */}
+          <div className="strategyAnalysis">
+            {/* <this.RecentBPItable input={this.state.historic_bpi_usd} /> */}
+            <InputForm
+              handleStateChange={this.handleStateChange}
+              investmentPerMonth={this.state.investmentPerMonth}
+              update={this.updateInvestmentPerMonth}
+            ></InputForm>
+            {/* <p>{this.state.investmentPerMonth} iPM</p> */}
             <Calculation
               historic_bpi_usd={this.state.historic_bpi_usd}
-            ></Calculation>
+              investmentPerMonth={this.state.investmentPerMonth}
+            />
           </div>
         </div>
         {/* <Contacts contacts={this.state.contacts} foaas="sss" /> */}
