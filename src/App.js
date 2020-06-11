@@ -16,6 +16,12 @@ class App extends Component {
       contacts: [],
       historic_bpi_usd: [],
       investmentPerMonth: 311,
+      investmentRangeStartYear: 2018,
+      investmentRangeStartMonth: 1,
+      investmentRangeStartDay: 1,
+      investmentRangeEndYear: 2019,
+      investmentRangeEndMonth: 11,
+      investmentRangeEndDay: 1,
     };
     this.updateInvestmentPerMonth = this.updateInvestmentPerMonth.bind(this);
   }
@@ -41,13 +47,40 @@ class App extends Component {
         }
       );
 
-    fetch("http://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => {
-        this.setState({ contacts: data });
-      })
-      .catch(console.log);
+    // fetch("http://jsonplaceholder.typicode.com/users")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     this.setState({ contacts: data });
+    //   })
+    //   .catch(console.log);
 
+    this.getHistoricalBPI();
+  }
+
+  getHistoricalBPI() {
+    fetch(
+      "https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-01-01&end=2018-01-05"
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        // console.log(result.bpi);
+        let updatedArr = [];
+        for (const k in result.bpi) {
+          // console.log(k, result.bpi[k]);
+          updatedArr.push({
+            date: k,
+            bpi: result.bpi[k],
+          });
+        }
+        this.setState({
+          isLoaded: true,
+          historic_bpi_usd: updatedArr, //overwrite array
+        });
+        // console.log(this.state.historic_bpi_usd);
+      });
+  }
+
+  getHistoricalBPIold() {
     for (let i = 1; i <= 12; i++) {
       let mm;
       i.toString().length === 1 ? (mm = "0" + i) : (mm = i); //add leading 0 for single digit values
@@ -62,10 +95,12 @@ class App extends Component {
         .then(
           (result) => {
             let updatedArr = this.state.historic_bpi_usd.concat(result.bpi);
+            // console.log(result.bpi[2]);
             this.setState({
               isLoaded: true,
               historic_bpi_usd: updatedArr,
             });
+            console.log(updatedArr);
           },
           (error) => {
             this.setState({
@@ -75,6 +110,7 @@ class App extends Component {
           }
         );
     }
+    // console.log(this.state.historic_bpi_usd);
   }
 
   updateInvestmentPerMonth(props) {

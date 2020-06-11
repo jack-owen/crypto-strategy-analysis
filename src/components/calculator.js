@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import React from "react";
 
 const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
-  const [analysis, setAnalysis] = useState("loading");
-  const [monthlyInvestmentAmount, setMonthlyInvestmentAmount] = useState(200);
+  // const [analysis, setAnalysis] = useState("loading");
+  // const [monthlyInvestmentAmount, setMonthlyInvestmentAmount] = useState(200);
 
   let accumulative = [];
-  let btc_aggregate = 0;
-  let rate_usd;
+  let btc_cummulative = 0;
+  // let rate_usd;
   let cummulative_investment = 0;
 
   historic_bpi_usd.map(function (item) {
-    btc_aggregate += (1 / Object.values(item)) * investmentPerMonth;
-    rate_usd = Object.values(item)[0];
-    console.log(investmentPerMonth);
+    btc_cummulative += (1 / item.bpi) * investmentPerMonth; // add this transaction/order to cummulative BTC total
     accumulative.push({
-      date: Object.keys(item)[0], //"2018-02-01"
-      rate_usd: longToUSD(rate_usd), //$9052.5763
-      btc_amount: (1 / Object.values(item)) * investmentPerMonth, //0.022093158165372214 BTC
-      btc_aggregate: btc_aggregate,
-      btc_aggregate_usd: longToUSD(btc_aggregate * rate_usd),
-      btc_aggregate_usd_unformatted: btc_aggregate * rate_usd,
-
-      cummulative_investment: (cummulative_investment += investmentPerMonth),
+      date: item.date, //"2018-02-01"
+      rate_usd: item.bpi, //$9052.5763 unformatted
+      btc_amount_single_order: (1 / item.bpi) * investmentPerMonth, //0.022093158165372214 BTC unformatted
+      btc_cummulative: btc_cummulative, //
+      btc_cummulative_usd: btc_cummulative * item.bpi,
+      cummulative_investment_usd: (cummulative_investment += investmentPerMonth),
     });
+    return null;
   });
 
   function longToUSD(value) {
@@ -47,8 +45,7 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
 
     /* write a profit report, pct loss/gain, net loss/gain */
     const obj = accumulative[accumulative.length - 1];
-    const netGain =
-      obj.btc_aggregate_usd_unformatted - obj.cummulative_investment;
+    const netGain = obj.btc_cummulative_usd - obj.cummulative_investment_usd;
 
     let profit;
     netGain > 0
@@ -62,23 +59,16 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
           {longToUSD(netGain)}
         </p>
         <p>
-          {obj.btc_aggregate_usd} final portfolio value
+          {longToUSD(obj.btc_cummulative_usd)} final portfolio value
           <br />
-          {longToUSD(obj.cummulative_investment)} Cuumulative investment total
+          {longToUSD(obj.cummulative_investment_usd)} investment total
         </p>
       </div>
     );
   }
 
-  return (
-    <div className="calculations">
-      {/* Investment strategy analysis */}
-      <div className="investment_strategy_analysis">
-        <h3>Investment Strategy Analysis</h3>
-        <h5>invest {longToUSD(investmentPerMonth)} every month</h5>
-
-        <Analysis />
-      </div>
+  function TableView(data) {
+    return (
       <table>
         <thead>
           <tr>
@@ -94,12 +84,12 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
           {accumulative.map((item) => (
             <tr key={item.date}>
               {/*Portfolio Value*/}
-              <td>{item.btc_aggregate_usd}</td>
-              <td>{item.btc_aggregate}</td>
+              <td>{longToUSD(item.btc_cummulative_usd)}</td>
+              <td>{item.btc_cummulative}</td>
               {/*BTC Rate*/}
-              <td>{item.rate_usd}</td>
+              <td>{longToUSD(item.rate_usd)}</td>
               {/*Invested*/}
-              <td>{longToUSD(item.cummulative_investment)}</td>
+              <td>{longToUSD(item.cummulative_investment_usd)}</td>
               <td>{longToUSD(investmentPerMonth)}</td>
               {/*Date*/}
               <td>{item.date}</td>
@@ -107,17 +97,20 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
           ))}
         </tbody>
       </table>
+    );
+  }
+
+  return (
+    <div className="calculations">
+      {/* Investment strategy analysis */}
+      <div className="investment_strategy_analysis">
+        <h3>Investment Strategy Analysis</h3>
+        <h5>invest {longToUSD(investmentPerMonth)} every month</h5>
+        <Analysis />
+        <TableView />
+      </div>
     </div>
   );
 };
-
-function StrategyAnalysis(props) {
-  return (
-    <div>
-      <h1>Hello, world!</h1>
-      <h2>It is {props.date.toLocaleTimeString()}.</h2>
-    </div>
-  );
-}
 
 export default Calculation;
