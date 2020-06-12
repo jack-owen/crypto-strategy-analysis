@@ -15,15 +15,16 @@ class App extends Component {
       datetime: null,
       contacts: [],
       historic_bpi_usd: [],
-      investmentPerMonth: 999,
+      investmentPerMonth: 100,
       investmentPeriod: {
         startYear: 2018,
         startMonth: 1,
         startDay: 1,
-        endYear: 2018,
-        endMonth: 1,
-        endDay: 15,
+        endYear: 2019,
+        endMonth: 12,
+        endDay: 1,
       },
+      validationError: true,
     };
     this.updateInvestmentParameters = this.updateInvestmentParameters.bind(
       this
@@ -37,7 +38,7 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.investmentPeriod !== this.state.investmentPeriod) {
-      console.log("state has changed -> API request");
+      // console.log("state has changed -> API request");
       this.getHistoricalBPI(this.state.investmentPeriod);
     }
   }
@@ -92,10 +93,13 @@ class App extends Component {
           let updatedArr = [];
           for (const k in result.bpi) {
             // console.log(k, result.bpi[k]);
-            updatedArr.push({
-              date: k,
-              bpi: result.bpi[k],
-            });
+            if (parseInt(k[8]) === 0 && parseInt(k[9]) === 1) {
+              // static 1st of the month check *should be update to become configurable from UI + be set by component State
+              updatedArr.push({
+                date: k,
+                bpi: result.bpi[k],
+              });
+            }
           }
           this.setState({
             isLoaded: true,
@@ -107,8 +111,9 @@ class App extends Component {
           this.setState({
             isLoaded: true,
             error,
+            historic_bpi_usd: [],
+            validationError: true,
           });
-          console.log(this.state.error);
         }
       );
   }
@@ -199,7 +204,7 @@ class App extends Component {
           console.log("switch statement default was hit, error");
       }
       this.setState({ investmentPeriod });
-      console.log(investmentPeriod);
+      // console.log(investmentPeriod);
     }
   }
 

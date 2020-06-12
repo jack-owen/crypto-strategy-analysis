@@ -47,17 +47,25 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
     const obj = accumulative[accumulative.length - 1];
     const netGain = obj.btc_cummulative_usd - obj.cummulative_investment_usd;
 
-    let profit;
-    netGain > 0
-      ? (profit = "A profit was made of ")
-      : (profit = "A loss was made of ");
-
+    let profitLoss;
+    netGain > 0 ? (profitLoss = "profit") : (profitLoss = "loss");
+    console.log(accumulative[0].date);
     return (
       <div>
-        <p>
-          {profit}
-          {longToUSD(netGain)}
-        </p>
+        <h3>Investment Strategy Analysis</h3>
+        <>
+          If you invested {longToUSD(investmentPerMonth)} each month for{" "}
+          {accumulative.length - 1} Months since{" "}
+          {accumulative[0].date[0] +
+            accumulative[0].date[1] +
+            accumulative[0].date[2] +
+            accumulative[0].date[3]}{" "}
+          you would have made a{" "}
+          <strong className="profitLossType">{profitLoss}</strong> of{" "}
+          {longToUSD(netGain)}, totaling a{" "}
+          {((netGain / obj.cummulative_investment_usd) * 100).toFixed(1)}%
+          return.
+        </>
         <p>
           {longToUSD(obj.btc_cummulative_usd)} final portfolio value
           <br />
@@ -104,8 +112,6 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
     <div className="calculations">
       {/* Investment strategy analysis */}
       <div className="investment_strategy_analysis">
-        <h3>Investment Strategy Analysis</h3>
-        <h5>invest {longToUSD(investmentPerMonth)} every month</h5>
         <Analysis />
         <TableView />
       </div>
