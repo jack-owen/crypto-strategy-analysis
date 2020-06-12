@@ -15,18 +15,38 @@ class App extends Component {
       datetime: null,
       contacts: [],
       historic_bpi_usd: [],
-      investmentPerMonth: 311,
-      investmentRangeStartYear: 2018,
-      investmentRangeStartMonth: 1,
-      investmentRangeStartDay: 1,
-      investmentRangeEndYear: 2019,
-      investmentRangeEndMonth: 11,
-      investmentRangeEndDay: 1,
+      investmentPerMonth: 999,
+      investmentPeriod: {
+        startYear: 2018,
+        startMonth: 1,
+        startDay: 1,
+        endYear: 2019,
+        endMonth: 5,
+        endDay: 20,
+      },
     };
-    this.updateInvestmentPerMonth = this.updateInvestmentPerMonth.bind(this);
+    this.updateInvestmentParameters = this.updateInvestmentParameters.bind(
+      this
+    );
+    // this.getHistoricalBPI(this.state.investmentPeriod);
   }
 
   componentDidMount() {
+    this.getCurrentBPI();
+    this.getHistoricalBPI(this.state.investmentPeriod);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.investmentPeriod.startYear !==
+      this.state.investmentPeriod.startYear
+    ) {
+      console.log("state has changed -> API request");
+      this.getHistoricalBPI(this.state.investmentPeriod);
+    }
+  }
+
+  getCurrentBPI() {
     fetch("https://api.coindesk.com/v1/bpi/currentprice/gbp.json")
       .then((res) => res.json())
       .then(
@@ -46,20 +66,28 @@ class App extends Component {
           });
         }
       );
-
-    // fetch("http://jsonplaceholder.typicode.com/users")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     this.setState({ contacts: data });
-    //   })
-    //   .catch(console.log);
-
-    this.getHistoricalBPI();
   }
 
-  getHistoricalBPI() {
+  getHistoricalBPI(date) {
+    function validate(data) {
+      if (data.toString().length === 1) return "0" + data;
+      return data;
+    }
+    // console.log("fetch API request");
     fetch(
-      "https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-01-01&end=2018-01-05"
+      // "https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-01-01&end=2018-01-05"
+      "https://api.coindesk.com/v1/bpi/historical/close.json?start=" +
+        date.startYear +
+        "-" +
+        validate(date.startMonth) +
+        "-" +
+        validate(date.startDay) +
+        "&end=" +
+        date.endYear +
+        "-" +
+        validate(date.endMonth) +
+        "-" +
+        validate(date.endDay)
     )
       .then((res) => res.json())
       .then((result) => {
@@ -113,7 +141,7 @@ class App extends Component {
     // console.log(this.state.historic_bpi_usd);
   }
 
-  updateInvestmentPerMonth(props) {
+  updateInvestmentPerMonth_old(props) {
     if (isNaN(parseInt(props))) {
       this.setState({
         investmentPerMonth: 0,
@@ -123,6 +151,48 @@ class App extends Component {
         investmentPerMonth: parseInt(props),
       });
     }
+  }
+
+  updateInvestmentParameters(props) {
+    // console.log(props);
+    const name = props.name;
+    const value = props.value;
+    if (name === "investmentPerMonth") {
+      if (isNaN(parseInt(value))) {
+        this.setState({
+          investmentPerMonth: 0,
+        });
+      } else {
+        const value = props.value;
+        this.setState({
+          investmentPerMonth: parseInt(value),
+        });
+      }
+    } else {
+      let investmentPeriod = { ...this.state.investmentPeriod }; // copy of the nested object to edit
+      switch (name) {
+        case "startMonth":
+          investmentPeriod.startMonth = value;
+          break;
+        case "startYear":
+          investmentPeriod.startYear = value;
+          break;
+        default:
+          console.log("switch statement default was hit, error");
+      }
+      this.setState({ investmentPeriod });
+    }
+  }
+
+  DebugInputForm(props) {
+    return (
+      <>
+        {props.investmentPeriod.startDay}-{props.investmentPeriod.startMonth}-
+        {props.investmentPeriod.startYear} to {props.investmentPeriod.endDay}-
+        {props.investmentPeriod.endMonth}-{props.investmentPeriod.endYear}{" "}
+        calculated monthly
+      </>
+    );
   }
 
   Currency({ currency = "null", amount = "null" }) {
@@ -173,8 +243,13 @@ class App extends Component {
             <InputForm
               handleStateChange={this.handleStateChange}
               investmentPerMonth={this.state.investmentPerMonth}
-              update={this.updateInvestmentPerMonth}
+              update={this.updateInvestmentParameters}
+              investmentPeriod={this.state.investmentPeriod}
             ></InputForm>
+            <this.DebugInputForm
+              investmentPeriod={this.state.investmentPeriod}
+            />
+
             {/* <p>{this.state.investmentPerMonth} iPM</p> */}
             <Calculation
               historic_bpi_usd={this.state.historic_bpi_usd}

@@ -43,3 +43,12 @@
   font-size: 0.7rem;
   text-align: center;
 }
+
+.strategyInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.strategyInput input {
+  max-width: 4rem;
+}

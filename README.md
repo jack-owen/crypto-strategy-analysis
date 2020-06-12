@@ -3,7 +3,17 @@
 An API project, to use the https://www.coindesk.com/coindesk-api and generate useful insight for crypto coins and my personal portfolios.
 \n
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+I wanted to understand how effective different static bitcoin
+investment strategies would have been against historic bitcoin prices,
+static being what if I was to purchase \$100 of coin on the first of
+every month, how effective would this strategy be? As opposed to
+manually trying to time the market to optimise portfolio value.
+\n
+I understand this task could have been done far more quickly using
+excel compared to learning to use React and revisitng JS, however I
+wanted to challenge myself to learn a new framework.
+\n
+The goal for this project as always for me is to revist and look at how code can be refactored to produce efficient and easy to understand code. Even the most complex of functions can be refactored into simple logic statements (most of the time).
 
 ## Available Scripts
 
