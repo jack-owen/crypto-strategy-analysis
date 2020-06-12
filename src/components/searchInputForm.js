@@ -21,18 +21,10 @@ class InputForm extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-
-    const payload = {
-      investmentPerMonth: value,
-      name: "investmentPerMonth",
-    };
-
     this.props.update({
       value: value,
       name: name,
     });
-
-    // this.props.update(event.target.value);
   }
 
   render() {
@@ -53,6 +45,12 @@ class InputForm extends Component {
           Start:
           <input
             type="text"
+            name="startDay"
+            value={this.props.investmentPeriod.startDay} //value of the passed component property
+            onChange={this.handleChange}
+          />
+          <input
+            type="text"
             name="startMonth"
             value={this.props.investmentPeriod.startMonth} //value of the passed component property
             onChange={this.handleChange}
@@ -61,6 +59,27 @@ class InputForm extends Component {
             type="text"
             name="startYear"
             value={this.props.investmentPeriod.startYear} //value of the passed component property
+            onChange={this.handleChange}
+          />
+        </label>
+        <label>
+          End:
+          <input
+            type="text"
+            name="endDay"
+            value={this.props.investmentPeriod.endDay} //value of the passed component property
+            onChange={this.handleChange}
+          />
+          <input
+            type="text"
+            name="endMonth"
+            value={this.props.investmentPeriod.endMonth} //value of the passed component property
+            onChange={this.handleChange}
+          />
+          <input
+            type="text"
+            name="endYear"
+            value={this.props.investmentPeriod.endYear} //value of the passed component property
             onChange={this.handleChange}
           />
         </label>

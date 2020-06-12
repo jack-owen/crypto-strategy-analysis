@@ -20,15 +20,14 @@ class App extends Component {
         startYear: 2018,
         startMonth: 1,
         startDay: 1,
-        endYear: 2019,
-        endMonth: 5,
-        endDay: 20,
+        endYear: 2018,
+        endMonth: 1,
+        endDay: 15,
       },
     };
     this.updateInvestmentParameters = this.updateInvestmentParameters.bind(
       this
     );
-    // this.getHistoricalBPI(this.state.investmentPeriod);
   }
 
   componentDidMount() {
@@ -37,10 +36,7 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.investmentPeriod.startYear !==
-      this.state.investmentPeriod.startYear
-    ) {
+    if (prevState.investmentPeriod !== this.state.investmentPeriod) {
       console.log("state has changed -> API request");
       this.getHistoricalBPI(this.state.investmentPeriod);
     }
@@ -90,22 +86,31 @@ class App extends Component {
         validate(date.endDay)
     )
       .then((res) => res.json())
-      .then((result) => {
-        // console.log(result.bpi);
-        let updatedArr = [];
-        for (const k in result.bpi) {
-          // console.log(k, result.bpi[k]);
-          updatedArr.push({
-            date: k,
-            bpi: result.bpi[k],
+      .then(
+        (result) => {
+          // console.log(result.bpi);
+          let updatedArr = [];
+          for (const k in result.bpi) {
+            // console.log(k, result.bpi[k]);
+            updatedArr.push({
+              date: k,
+              bpi: result.bpi[k],
+            });
+          }
+          this.setState({
+            isLoaded: true,
+            historic_bpi_usd: updatedArr, //overwrite array
           });
+          // console.log(this.state.historic_bpi_usd);
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error,
+          });
+          console.log(this.state.error);
         }
-        this.setState({
-          isLoaded: true,
-          historic_bpi_usd: updatedArr, //overwrite array
-        });
-        // console.log(this.state.historic_bpi_usd);
-      });
+      );
   }
 
   getHistoricalBPIold() {
@@ -156,7 +161,7 @@ class App extends Component {
   updateInvestmentParameters(props) {
     // console.log(props);
     const name = props.name;
-    const value = props.value;
+    const value = parseInt(props.value);
     if (name === "investmentPerMonth") {
       if (isNaN(parseInt(value))) {
         this.setState({
@@ -169,18 +174,32 @@ class App extends Component {
         });
       }
     } else {
+      // name = startDay, ..., endYear
       let investmentPeriod = { ...this.state.investmentPeriod }; // copy of the nested object to edit
       switch (name) {
+        case "startDay":
+          investmentPeriod.startDay = value;
+          break;
         case "startMonth":
           investmentPeriod.startMonth = value;
           break;
         case "startYear":
           investmentPeriod.startYear = value;
           break;
+        case "endDay":
+          investmentPeriod.endDay = value;
+          break;
+        case "endMonth":
+          investmentPeriod.endMonth = value;
+          break;
+        case "endYear":
+          investmentPeriod.endYear = value;
+          break;
         default:
           console.log("switch statement default was hit, error");
       }
       this.setState({ investmentPeriod });
+      console.log(investmentPeriod);
     }
   }
 
@@ -246,9 +265,9 @@ class App extends Component {
               update={this.updateInvestmentParameters}
               investmentPeriod={this.state.investmentPeriod}
             ></InputForm>
-            <this.DebugInputForm
+            {/* <this.DebugInputForm
               investmentPeriod={this.state.investmentPeriod}
-            />
+            /> */}
 
             {/* <p>{this.state.investmentPerMonth} iPM</p> */}
             <Calculation
