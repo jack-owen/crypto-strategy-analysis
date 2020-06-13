@@ -4,6 +4,12 @@ import "./App.css";
 import Calculation from "./components/calculator.js";
 import InputForm from "./components/searchInputForm.js";
 
+const buyFrequencyOptions = {
+  daily: "daily",
+  weekly: "weekly",
+  monthly: "monthly",
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +21,7 @@ class App extends Component {
       datetime: null,
       contacts: [],
       historic_bpi_usd: [],
-      investmentPerMonth: 100,
+      investmentPerMonth: 100, // rename to buyAmount or investmentAmount
       investmentPeriod: {
         startYear: 2018,
         startMonth: 1,
@@ -25,6 +31,7 @@ class App extends Component {
         endDay: 1,
       },
       validationError: true,
+      buyFrequency: buyFrequencyOptions.monthly,
     };
     this.updateInvestmentParameters = this.updateInvestmentParameters.bind(
       this
@@ -37,7 +44,10 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.investmentPeriod !== this.state.investmentPeriod) {
+    if (
+      prevState.investmentPeriod !== this.state.investmentPeriod ||
+      prevState.buyFrequency !== this.state.buyFrequency
+    ) {
       // console.log("state has changed -> API request");
       this.getHistoricalBPI(this.state.investmentPeriod);
     }
@@ -70,9 +80,61 @@ class App extends Component {
       if (data.toString().length === 1) return "0" + data;
       return data;
     }
-    // console.log("fetch API request");
+
+    // select desired frequency of bitcoin records from daily json records (daily, weekly, monthly)
+    function frequencySelection(data, buyFrequency) {
+      let result = [];
+      // console.log(data);
+      // console.log(Object.keys(data));
+      // console.log(Object.values(data));
+      //conditions:
+      // daily = everything. perhaps an else
+      // weekly = when day = "01", 8, 15, 22, 29
+      // monthly = when day == "01"
+
+      // console.log(buyFrequency);
+
+      if (buyFrequency === buyFrequencyOptions.monthly) {
+        // select first of the month dates only
+        for (const key in data) {
+          const day = key[8] + key[9];
+          if (day === "01") {
+            const value = data[key];
+            result.push({
+              date: key,
+              bpi: value,
+            });
+          }
+        }
+      } else if (buyFrequency === buyFrequencyOptions.weekly) {
+        // select the following days in each month -> 1, 8, 15, 22, 29
+        //* a more advanced method would be to select all dates that fall on a Monday
+        for (const key in data) {
+          const day = key[8] + key[9];
+          if (["01", "08", "15", "22", "29"].includes(day)) {
+            const value = data[key];
+            result.push({
+              date: key,
+              bpi: value,
+            });
+          }
+        }
+      } else {
+        for (const key in data) {
+          const value = data[key];
+          result.push({
+            date: key,
+            bpi: value,
+          });
+        }
+      }
+
+      // if (parseInt(key[8]) === 0 && parseInt(key[9]) === 1) {
+
+      return result;
+    }
+
     fetch(
-      // "https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-01-01&end=2018-01-05"
       "https://api.coindesk.com/v1/bpi/historical/close.json?start=" +
         date.startYear +
         "-" +
@@ -89,21 +151,12 @@ class App extends Component {
       .then((res) => res.json())
       .then(
         (result) => {
-          // console.log(result.bpi);
-          let updatedArr = [];
-          for (const k in result.bpi) {
-            // console.log(k, result.bpi[k]);
-            if (parseInt(k[8]) === 0 && parseInt(k[9]) === 1) {
-              // static 1st of the month check *should be update to become configurable from UI + be set by component State
-              updatedArr.push({
-                date: k,
-                bpi: result.bpi[k],
-              });
-            }
-          }
           this.setState({
             isLoaded: true,
-            historic_bpi_usd: updatedArr, //overwrite array
+            historic_bpi_usd: frequencySelection(
+              result.bpi,
+              this.state.buyFrequency
+            ), //overwrite array
           });
           // console.log(this.state.historic_bpi_usd);
         },
@@ -166,7 +219,7 @@ class App extends Component {
   updateInvestmentParameters(props) {
     // console.log(props);
     const name = props.name;
-    const value = parseInt(props.value);
+    let value = props.value;
     if (name === "investmentPerMonth") {
       if (isNaN(parseInt(value))) {
         this.setState({
@@ -178,9 +231,15 @@ class App extends Component {
           investmentPerMonth: parseInt(value),
         });
       }
+    } else if (name === "buyFrequency") {
+      // change state of buyFrequency according to the value prop.
+      this.setState({
+        buyFrequency: value,
+      });
     } else {
       // name = startDay, ..., endYear
       let investmentPeriod = { ...this.state.investmentPeriod }; // copy of the nested object to edit
+      value = parseInt(value);
       switch (name) {
         case "startDay":
           investmentPeriod.startDay = value;
@@ -201,10 +260,14 @@ class App extends Component {
           investmentPeriod.endYear = value;
           break;
         default:
-          console.log("switch statement default was hit, error");
+          console.log(
+            "switch statement default was hit, error \nname:" +
+              name +
+              "\nvalue: " +
+              value
+          );
       }
       this.setState({ investmentPeriod });
-      // console.log(investmentPeriod);
     }
   }
 
@@ -257,11 +320,19 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="header">Crypto Portfolio Tracker</header>
+        <header className="header">Crypto Historic Strategy Analysis</header>
         <div className="container">
-          <div className="datetime">{this.state.datetime}</div>
-          <this.Currency currency="gbp" amount={this.state.gbp}></this.Currency>
-          <this.Currency currency="usd" amount={this.state.usd}></this.Currency>
+          <div className="key-information">
+            <div className="datetime">{this.state.datetime}</div>
+            <this.Currency
+              currency="gbp"
+              amount={this.state.gbp}
+            ></this.Currency>
+            <this.Currency
+              currency="usd"
+              amount={this.state.usd}
+            ></this.Currency>
+          </div>
           <div className="strategyAnalysis">
             {/* <this.RecentBPItable input={this.state.historic_bpi_usd} /> */}
             <InputForm
@@ -269,6 +340,7 @@ class App extends Component {
               investmentPerMonth={this.state.investmentPerMonth}
               update={this.updateInvestmentParameters}
               investmentPeriod={this.state.investmentPeriod}
+              buyFrequency={this.state.buyFrequency}
             ></InputForm>
             {/* <this.DebugInputForm
               investmentPeriod={this.state.investmentPeriod}

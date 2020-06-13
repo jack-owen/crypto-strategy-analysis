@@ -33,6 +33,15 @@
   min-height: 900px;
 }
 
+.key-information {
+  display: flex;
+  padding-bottom: 1rem;
+}
+
+.key-information div {
+  padding-right: 2.5rem;
+}
+
 .strategyAnalysis th,
 .strategyAnalysis td {
   padding-right: 1rem;
@@ -51,4 +60,12 @@
 
 .strategyInput input {
   max-width: 4rem;
+}
+
+.strategyInput .buyFrequency {
+  display: flex;
+}
+
+.strategyInput .buyFrequency .checkboxes {
+  padding-right: 1rem;
 }

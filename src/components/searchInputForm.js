@@ -30,17 +30,53 @@ class InputForm extends Component {
   render() {
     return (
       <form className="strategyInput" onSubmit={this.handleSubmit}>
-        <h4>input form</h4>
+        <h4>Enter Your BTC Strategy Conditions</h4>
 
-        <label>
-          Investment per Month:
+        <div>
+          <label className="buyAmount">Purchase amount:</label>
           <input
             type="text"
             name="investmentPerMonth"
             value={this.props.investmentPerMonth} //value of the passed component property
             onChange={this.handleChange}
           />
-        </label>
+        </div>
+        <div className="buyFrequency">
+          <div className="checkboxes">
+            <input
+              type="checkbox"
+              id="daily"
+              name="buyFrequency"
+              value="daily"
+              checked={this.props.buyFrequency === "daily" ? true : false}
+              onChange={this.handleChange}
+            />
+            <label htmlFor="daily">Daily</label>
+          </div>
+          <div className="checkboxes">
+            <input
+              type="checkbox"
+              id="weekly"
+              name="buyFrequency"
+              value="weekly"
+              checked={this.props.buyFrequency === "weekly" ? true : false}
+              onChange={this.handleChange}
+            />
+            <label htmlFor="weekly">Weekly</label>
+          </div>
+          <div className="checkboxes">
+            <input
+              type="checkbox"
+              id="monthly"
+              name="buyFrequency"
+              value="monthly"
+              checked={this.props.buyFrequency === "monthly" ? true : false}
+              onChange={this.handleChange}
+            />
+            <label htmlFor="monthly">Monthly</label>
+          </div>
+        </div>
+
         <label>
           Start:
           <input

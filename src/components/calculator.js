@@ -49,7 +49,6 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
 
     let profitLoss;
     netGain > 0 ? (profitLoss = "profit") : (profitLoss = "loss");
-    console.log(accumulative[0].date);
     return (
       <div>
         <h3>Investment Strategy Analysis</h3>
@@ -84,7 +83,6 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
             <th>Portfolio Value BTC</th>
             <th>BTC Rate</th>
             <th>Cuumulative Invested</th>
-            <th>Invested USD</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -98,7 +96,6 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
               <td>{longToUSD(item.rate_usd)}</td>
               {/*Invested*/}
               <td>{longToUSD(item.cummulative_investment_usd)}</td>
-              <td>{longToUSD(investmentPerMonth)}</td>
               {/*Date*/}
               <td>{item.date}</td>
             </tr>
