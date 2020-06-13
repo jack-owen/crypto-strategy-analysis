@@ -21,7 +21,7 @@ class App extends Component {
       datetime: null,
       contacts: [],
       historic_bpi_usd: [],
-      investmentPerMonth: 100, // rename to buyAmount or investmentAmount
+      investmentPerMonth: 100, //+ rename to buyAmount or investmentAmount
       investmentPeriod: {
         startYear: 2018,
         startMonth: 1,
@@ -48,7 +48,6 @@ class App extends Component {
       prevState.investmentPeriod !== this.state.investmentPeriod ||
       prevState.buyFrequency !== this.state.buyFrequency
     ) {
-      // console.log("state has changed -> API request");
       this.getHistoricalBPI(this.state.investmentPeriod);
     }
   }
@@ -84,16 +83,6 @@ class App extends Component {
     // select desired frequency of bitcoin records from daily json records (daily, weekly, monthly)
     function frequencySelection(data, buyFrequency) {
       let result = [];
-      // console.log(data);
-      // console.log(Object.keys(data));
-      // console.log(Object.values(data));
-      //conditions:
-      // daily = everything. perhaps an else
-      // weekly = when day = "01", 8, 15, 22, 29
-      // monthly = when day == "01"
-
-      // console.log(buyFrequency);
-
       if (buyFrequency === buyFrequencyOptions.monthly) {
         // select first of the month dates only
         for (const key in data) {
@@ -128,9 +117,6 @@ class App extends Component {
           });
         }
       }
-
-      // if (parseInt(key[8]) === 0 && parseInt(key[9]) === 1) {
-
       return result;
     }
 
@@ -158,7 +144,6 @@ class App extends Component {
               this.state.buyFrequency
             ), //overwrite array
           });
-          // console.log(this.state.historic_bpi_usd);
         },
         (error) => {
           this.setState({
@@ -171,53 +156,7 @@ class App extends Component {
       );
   }
 
-  getHistoricalBPIold() {
-    for (let i = 1; i <= 12; i++) {
-      let mm;
-      i.toString().length === 1 ? (mm = "0" + i) : (mm = i); //add leading 0 for single digit values
-      fetch(
-        "https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-" +
-          mm +
-          "-01&end=2018-" +
-          mm +
-          "-01"
-      )
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            let updatedArr = this.state.historic_bpi_usd.concat(result.bpi);
-            // console.log(result.bpi[2]);
-            this.setState({
-              isLoaded: true,
-              historic_bpi_usd: updatedArr,
-            });
-            console.log(updatedArr);
-          },
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error,
-            });
-          }
-        );
-    }
-    // console.log(this.state.historic_bpi_usd);
-  }
-
-  updateInvestmentPerMonth_old(props) {
-    if (isNaN(parseInt(props))) {
-      this.setState({
-        investmentPerMonth: 0,
-      });
-    } else {
-      this.setState({
-        investmentPerMonth: parseInt(props),
-      });
-    }
-  }
-
   updateInvestmentParameters(props) {
-    // console.log(props);
     const name = props.name;
     let value = props.value;
     if (name === "investmentPerMonth") {
@@ -269,17 +208,6 @@ class App extends Component {
       }
       this.setState({ investmentPeriod });
     }
-  }
-
-  DebugInputForm(props) {
-    return (
-      <>
-        {props.investmentPeriod.startDay}-{props.investmentPeriod.startMonth}-
-        {props.investmentPeriod.startYear} to {props.investmentPeriod.endDay}-
-        {props.investmentPeriod.endMonth}-{props.investmentPeriod.endYear}{" "}
-        calculated monthly
-      </>
-    );
   }
 
   Currency({ currency = "null", amount = "null" }) {
@@ -334,7 +262,6 @@ class App extends Component {
             ></this.Currency>
           </div>
           <div className="strategyAnalysis">
-            {/* <this.RecentBPItable input={this.state.historic_bpi_usd} /> */}
             <InputForm
               handleStateChange={this.handleStateChange}
               investmentPerMonth={this.state.investmentPerMonth}
@@ -342,18 +269,12 @@ class App extends Component {
               investmentPeriod={this.state.investmentPeriod}
               buyFrequency={this.state.buyFrequency}
             ></InputForm>
-            {/* <this.DebugInputForm
-              investmentPeriod={this.state.investmentPeriod}
-            /> */}
-
-            {/* <p>{this.state.investmentPerMonth} iPM</p> */}
             <Calculation
               historic_bpi_usd={this.state.historic_bpi_usd}
               investmentPerMonth={this.state.investmentPerMonth}
             />
           </div>
         </div>
-        {/* <Contacts contacts={this.state.contacts} foaas="sss" /> */}
         <div className="footer">
           <div className="bpi-disclaimer">{this.state.disclaimer}</div>
         </div>
