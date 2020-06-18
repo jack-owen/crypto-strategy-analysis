@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 // import Contacts from "./components/contacts.js";
-import Calculation from "./components/calculator.js";
+import StrategyAnalysis from "./components/strategyAnalysis.js";
 import InputForm from "./components/searchInputForm.js";
 
 const buyFrequencyOptions = {
@@ -268,8 +268,8 @@ class App extends Component {
               update={this.updateInvestmentParameters}
               investmentPeriod={this.state.investmentPeriod}
               buyFrequency={this.state.buyFrequency}
-            ></InputForm>
-            <Calculation
+            />
+            <StrategyAnalysis
               historic_bpi_usd={this.state.historic_bpi_usd}
               investmentPerMonth={this.state.investmentPerMonth}
             />

@@ -1,7 +1,9 @@
 // import React, { useState, useEffect } from "react";
 import React from "react";
+// import { render } from "@testing-library/react";
+import Graph from "../components/graph.js";
 
-const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
+const StrategyAnalysis = ({ historic_bpi_usd, investmentPerMonth }) => {
   // const [analysis, setAnalysis] = useState("loading");
   // const [monthlyInvestmentAmount, setMonthlyInvestmentAmount] = useState(200);
 
@@ -29,14 +31,6 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
       currency: "USD",
     }).format(value);
   }
-
-  // useEffect(() => {
-  //   document.title = `You clicked 22 times`;
-  //   if (accumulative.length !== 0) {
-  //     const obj = accumulative[accumulative.length - 1];
-  //     setAnalysis(obj.date + " " + obj.rate_usd + " " + obj.btc_aggregate);
-  //   }
-  // }, [accumulative]);
 
   function Analysis() {
     if (accumulative.length === 0) {
@@ -72,6 +66,27 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
         </p>
       </div>
     );
+  }
+
+  function GraphView() {
+    let data = [];
+    for (let i = 0; i < accumulative.length; i++) {
+      const obj = accumulative[i];
+      data.push({
+        name: obj.date,
+        invested: obj.cummulative_investment_usd,
+        worth: obj.btc_cummulative_usd,
+      });
+    }
+
+    // const data2 = [
+    //   { name: "day1", invested: 400, worth: 400 },
+    //   { name: "day2", invested: 450, worth: 470 },
+    //   { name: "day3", invested: 500, worth: 490 },
+    //   { name: "day4", invested: 550, worth: 600 },
+    // ];
+
+    return <Graph data={data}></Graph>;
   }
 
   function TableView(data) {
@@ -110,10 +125,11 @@ const Calculation = ({ historic_bpi_usd, investmentPerMonth }) => {
       {/* Investment strategy analysis */}
       <div className="investment_strategy_analysis">
         <Analysis />
+        <GraphView />
         <TableView />
       </div>
     </div>
   );
 };
 
-export default Calculation;
+export default StrategyAnalysis;
