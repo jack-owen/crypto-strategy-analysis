@@ -1,0 +1,7 @@
+type Strategy @model {
+  id: ID!
+  dateStart: AWSDate
+  dateEnd: AWSDate
+  investmentAmount: Float
+  investmentFrequency: String
+}
