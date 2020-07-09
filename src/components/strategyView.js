@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react";
 import Graph from "../components/graph.js";
 import CoindeskAPI from "./../client/coindesk";
+import { logDOM } from "@testing-library/react";
 
 const StrategyView = (props) => {
   const [historicBPI, setHistoricalBPI] = useState({
     isLoaded: false,
     bpi_usd: [],
   });
-  const [strategy, setStrategy] = useState(props.strategy);
   const [strategyReport, setStrategyReport] = useState([]);
-  const [tableView] = useState(true);
 
+  // update historicalBPI data for the given strategy parameters
   useEffect(() => {
     CoindeskAPI(
-      strategy.dateStart,
-      strategy.dateEnd,
-      strategy.investmentFrequency,
+      props.strategy.dateStart,
+      props.strategy.dateEnd,
+      props.strategy.investmentFrequency,
       setHistoricalBPI
     );
-  }, [strategy.dateStart, strategy.dateEnd, strategy.investmentFrequency]);
+  }, [
+    props.strategy.dateStart,
+    props.strategy.dateEnd,
+    props.strategy.investmentFrequency,
+  ]);
 
+  // calculate strategy report for the updated historicalBPI data
   useEffect(() => {
-    if (!historicBPI.isLoaded) return;
-    setStrategyReport(getStrategyReport(historicBPI, strategy));
-  }, [historicBPI, strategy]);
+    if (!historicBPI.isLoaded) return; // before coindesk api has updated the historical bpi
+    setStrategyReport(getStrategyReport(historicBPI, props.strategy));
+  }, [historicBPI, props.strategy]);
 
   function GraphView() {
     // for some reason this function breaks when moved outside of this scope.
@@ -43,7 +48,11 @@ const StrategyView = (props) => {
     <>
       <h2>Strategy analysis</h2>
       {/* textual analysis report section here */}
-      {tableView ? <TableView report={strategyReport} /> : <GraphView />}
+      {props.graphView ? (
+        <GraphView />
+      ) : (
+        <TableView report={strategyReport} historicBPI={historicBPI} />
+      )}
     </>
   );
 };
@@ -57,9 +66,9 @@ const getStrategyReport = (historicBPI, strategy) => {
       portfolioValue_btc: (investmentTotal_btc +=
         (1 / item.bpi) * strategy.investmentAmount),
       portfolioValue_usd: investmentTotal_btc * item.bpi,
-      bpi_usd: item.bpi, //$9052.5763 unformatted
+      bpi_usd: item.bpi, //eg. $9052.5763 unformatted
       depositTotal_usd: (investmentTotal_usd += strategy.investmentAmount),
-      date: item.date, //"2018-02-01"
+      date: item.date, //eg. "2018-02-01"
     })
   );
   return report;

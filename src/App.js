@@ -13,7 +13,6 @@ const buyFrequencyOptions = {
   weekly: "weekly",
   monthly: "monthly",
 };
-
 const initialStrategy = {
   dateStart: "2018-11-11",
   dateEnd: "2019-05-02",
@@ -24,6 +23,7 @@ const initialStrategy = {
 const App = () => {
   const [strategies, setStrategies] = useState([]);
   const [loadedStrategy, setLoadedStrategy] = useState(initialStrategy);
+  const [graphView, setGraphView] = useState(true); // graph vs table views
 
   useEffect(() => {
     fetchStrategies();
@@ -78,10 +78,12 @@ const App = () => {
       <StrategyRules
         strategy={loadedStrategy}
         handleChange={setLoadedStrategy}
+        graphView={graphView}
+        setGraphView={setGraphView}
       />
       {/* graph view/table views (pass all props to caleld function), 
       this func can manage the view state default is graph. */}
-      <StrategyView strategy={loadedStrategy} />
+      <StrategyView strategy={loadedStrategy} graphView={graphView} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -6,16 +6,19 @@ import MenuItem from "@material-ui/core/MenuItem";
 // import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardTimePicker,
-//   KeyboardDatePicker,
-// } from "@material-ui/pickers";
+import Switch from "@material-ui/core/Switch";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import FormControl from '@material-ui/core/FormControl';
 
 const StrategyRules = (props) => {
   const classes = useStyles();
 
+  //+ add input validation checks
   const handleChange = (event) => {
+    // update this function to use the method below '...' read about this js method
+    // setTableView({ ...tableView, [event.target.name]: event.target.checked });
+
     const item = {
       dateStart: props.strategy.dateStart,
       dateEnd: props.strategy.dateEnd,
@@ -24,6 +27,10 @@ const StrategyRules = (props) => {
     };
     item[event.target.name] = event.target.value;
     props.handleChange(item);
+  };
+
+  const handleChangeSwitch = (event) => {
+    props.setGraphView(event.target.checked);
   };
 
   return (
@@ -73,6 +80,22 @@ const StrategyRules = (props) => {
           <MenuItem value={"weekly"}>Weekly</MenuItem>
           <MenuItem value={"monthly"}>Monthly</MenuItem>
         </Select>
+      </FormControl>
+      <FormControl component="fieldset">
+        <FormControlLabel
+          value="graph"
+          control={
+            <Switch
+              checked={props.graphView}
+              onChange={handleChangeSwitch}
+              name="graphView"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+            />
+          }
+          label="Graph View"
+          labelPlacement="start"
+          handle
+        />
       </FormControl>
     </div>
   );
