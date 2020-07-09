@@ -3,13 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-// import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import FormControl from '@material-ui/core/FormControl';
 
 const StrategyRules = (props) => {
   const classes = useStyles();
@@ -18,7 +15,6 @@ const StrategyRules = (props) => {
   const handleChange = (event) => {
     // update this function to use the method below '...' read about this js method
     // setTableView({ ...tableView, [event.target.name]: event.target.checked });
-
     const item = {
       dateStart: props.strategy.dateStart,
       dateEnd: props.strategy.dateEnd,

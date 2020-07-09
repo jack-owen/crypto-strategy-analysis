@@ -61,16 +61,33 @@ const getStrategyReport = (historicBPI, strategy) => {
   let report = [];
   let investmentTotal_btc = 0;
   let investmentTotal_usd = 0; // usd
-  historicBPI.bpi_usd.map((item) =>
+  const investmentAmount = parseFloat(strategy.investmentAmount);
+  //   historicBPI.bpi_usd.map((item) =>
+  //     report.push({
+  //       portfolioValue_btc: (investmentTotal_btc +=
+  //         (1 / item.bpi) * parseFloat(strategy.investmentAmount)),
+  //       portfolioValue_usd: investmentTotal_btc * item.bpi,
+  //       bpi_usd: item.bpi, //eg. $9052.5763 unformatted
+  //       depositTotal_usd: (investmentTotal_usd += parseFloat(
+  //         strategy.investmentAmount
+  //       )),
+  //       date: item.date, //eg. "2018-02-01"
+  //     })
+  //   );
+  //   historicBPI.bpi_usd.map(function (item) {
+  historicBPI.bpi_usd.forEach(function (item) {
+    const bpi = item.bpi;
+    investmentTotal_btc += (1 / bpi) * investmentAmount;
+    investmentTotal_usd += investmentAmount;
+    const portfolioValue_usd = investmentTotal_btc * bpi;
     report.push({
-      portfolioValue_btc: (investmentTotal_btc +=
-        (1 / item.bpi) * strategy.investmentAmount),
-      portfolioValue_usd: investmentTotal_btc * item.bpi,
-      bpi_usd: item.bpi, //eg. $9052.5763 unformatted
-      depositTotal_usd: (investmentTotal_usd += strategy.investmentAmount),
+      portfolioValue_btc: investmentTotal_btc,
+      portfolioValue_usd: portfolioValue_usd,
+      bpi_usd: bpi, //eg. $9052.5763 unformatted
+      depositTotal_usd: investmentTotal_usd,
       date: item.date, //eg. "2018-02-01"
-    })
-  );
+    });
+  });
   return report;
 };
 
