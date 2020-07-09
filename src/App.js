@@ -1,18 +1,29 @@
 /* src/App.js */
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
-import { createTodo, createStrategy } from "./graphql/mutations";
-import { listTodos, listStrategys } from "./graphql/queries";
+import { createStrategy } from "./graphql/mutations";
+import { listStrategys } from "./graphql/queries";
+// import StrategyAnalysis from "./components/strategyAnalysis.js";
+// import InputForm from "./components/searchInputForm.js";
+import StrategyView from "./components/strategyView";
+import StrategyRules from "./components/strategyRules";
+
+const buyFrequencyOptions = {
+  daily: "daily",
+  weekly: "weekly",
+  monthly: "monthly",
+};
 
 const initialStrategy = {
   dateStart: "2018-11-11",
   dateEnd: "2019-05-02",
   investmentAmount: 200.1,
-  investmentFrequency: "MONTHLY",
+  investmentFrequency: buyFrequencyOptions.monthly,
 };
 
 const App = () => {
   const [strategies, setStrategies] = useState([]);
+  const [loadedStrategy, setLoadedStrategy] = useState(initialStrategy);
 
   useEffect(() => {
     fetchStrategies();
@@ -21,7 +32,7 @@ const App = () => {
   async function fetchStrategies() {
     try {
       const data = await API.graphql(graphqlOperation(listStrategys));
-      const strategies = data.data.listStrategys.items;
+      // const strategies = data.data.listStrategys.items;
       setStrategies(data.data.listStrategys.items);
     } catch (err) {
       console.log("error fetching strategies");
@@ -48,20 +59,29 @@ const App = () => {
 
   return (
     <div className={"App"}>
-      <div className={"temporary"} style={styles.container}>
+      <div className={"saved-strategies"} style={styles.container}>
         <h2>Strategy</h2>
         <button style={styles.button} onClick={handleAddStrategy}>
           Save Strategy
         </button>
+        {/* onclick load strategy function to view */}
         {strategies.map((item) => (
           <>
-            <p>{item.dateEnd}</p>
-            <p>{item.dateStart}</p>
-            <p>{item.investmentAmount}</p>
-            <p>{item.investmentFrequency}</p>
+            <p>
+              {item.dateStart} to {item.dateEnd} for ${item.investmentAmount}{" "}
+              every {item.investmentFrequency}
+            </p>
           </>
         ))}
       </div>
+      {/* configuration strategy inputs, view toggle + more, states will be held in this function */}
+      <StrategyRules
+        strategy={loadedStrategy}
+        handleChange={setLoadedStrategy}
+      />
+      {/* graph view/table views (pass all props to caleld function), 
+      this func can manage the view state default is graph. */}
+      <StrategyView strategy={loadedStrategy} />
     </div>
   );
 };
@@ -69,25 +89,14 @@ const App = () => {
 const styles = {
   container: {
     width: 400,
-    margin: "0 auto",
     display: "flex",
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     padding: 20,
   },
-  todo: { marginBottom: 15 },
-  input: {
-    border: "none",
-    backgroundColor: "#ddd",
-    marginBottom: 10,
-    padding: 8,
-    fontSize: 18,
-  },
-  todoName: { fontSize: 20, fontWeight: "bold" },
-  todoDescription: { marginBottom: 0 },
   button: {
-    backgroundColor: "black",
+    backgroundColor: "darkblue",
     color: "white",
     outline: "none",
     fontSize: 18,
