@@ -7,6 +7,10 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Button from "@material-ui/core/Button";
+import SaveIcon from "@material-ui/icons/Save";
+import { API, graphqlOperation } from "aws-amplify";
+import { createStrategy } from "./../graphql/mutations";
 
 const StrategyRules = (props) => {
   const classes = useStyles();
@@ -25,18 +29,31 @@ const StrategyRules = (props) => {
     props.handleChange(item);
   };
 
-  const handleChangeSwitch = (event) => {
+  const handleChangeGraphView = (event) => {
     props.setGraphView(event.target.checked);
   };
 
+  async function handleSaveStrategy(event) {
+    console.log("adding strategy via btn");
+    try {
+      props.setSavedStrategies([...props.savedStrategies, props.strategy]);
+      await API.graphql(
+        graphqlOperation(createStrategy, { input: props.strategy })
+      );
+    } catch (err) {
+      console.log("error creating todo:", err);
+    }
+  }
+
   return (
     <div className="strategy-rules">
-      <h2>Strategy Rules</h2>
+      <h2>Strategy Control</h2>
       <TextField
         id="date"
         label="start"
         type="date"
-        defaultValue={props.strategy.dateStart}
+        // defaultValue={props.strategy.dateStart}
+        value={props.strategy.dateStart}
         className={classes.textField}
         name="dateStart"
         onChange={handleChange}
@@ -48,7 +65,8 @@ const StrategyRules = (props) => {
         id="date"
         label="end"
         type="date"
-        defaultValue={props.strategy.dateEnd}
+        // defaultValue={props.strategy.dateEnd}
+        value={props.strategy.dateEnd}
         className={classes.textField}
         name="dateEnd"
         onChange={handleChange}
@@ -83,7 +101,7 @@ const StrategyRules = (props) => {
           control={
             <Switch
               checked={props.graphView}
-              onChange={handleChangeSwitch}
+              onChange={handleChangeGraphView}
               name="graphView"
               inputProps={{ "aria-label": "secondary checkbox" }}
             />
@@ -93,6 +111,16 @@ const StrategyRules = (props) => {
           handle
         />
       </FormControl>
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        className={classes.button}
+        startIcon={<SaveIcon />}
+        onClick={handleSaveStrategy}
+      >
+        Save
+      </Button>
     </div>
   );
 };
@@ -114,6 +142,9 @@ const useStyles = makeStyles((theme) => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
   },
 }));
 

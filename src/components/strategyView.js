@@ -12,6 +12,7 @@ const StrategyView = (props) => {
 
   // update historicalBPI data for the given strategy parameters
   useEffect(() => {
+    if (!props.strategy.loaded) return; // if strategy is not loaded, quit
     CoindeskAPI(
       props.strategy.dateStart,
       props.strategy.dateEnd,
@@ -19,6 +20,7 @@ const StrategyView = (props) => {
       setHistoricalBPI
     );
   }, [
+    props.strategy.loaded,
     props.strategy.dateStart,
     props.strategy.dateEnd,
     props.strategy.investmentFrequency,
@@ -62,19 +64,6 @@ const getStrategyReport = (historicBPI, strategy) => {
   let investmentTotal_btc = 0;
   let investmentTotal_usd = 0; // usd
   const investmentAmount = parseFloat(strategy.investmentAmount);
-  //   historicBPI.bpi_usd.map((item) =>
-  //     report.push({
-  //       portfolioValue_btc: (investmentTotal_btc +=
-  //         (1 / item.bpi) * parseFloat(strategy.investmentAmount)),
-  //       portfolioValue_usd: investmentTotal_btc * item.bpi,
-  //       bpi_usd: item.bpi, //eg. $9052.5763 unformatted
-  //       depositTotal_usd: (investmentTotal_usd += parseFloat(
-  //         strategy.investmentAmount
-  //       )),
-  //       date: item.date, //eg. "2018-02-01"
-  //     })
-  //   );
-  //   historicBPI.bpi_usd.map(function (item) {
   historicBPI.bpi_usd.forEach(function (item) {
     const bpi = item.bpi;
     investmentTotal_btc += (1 / bpi) * investmentAmount;

@@ -6,7 +6,7 @@ import { listStrategys } from "./graphql/queries";
 // import StrategyAnalysis from "./components/strategyAnalysis.js";
 // import InputForm from "./components/searchInputForm.js";
 import StrategyView from "./components/strategyView";
-import StrategyRules from "./components/strategyRules";
+import StrategyControl from "./components/strategyControl";
 
 const buyFrequencyOptions = {
   daily: "daily",
@@ -21,8 +21,14 @@ const initialStrategy = {
 };
 
 const App = () => {
-  const [strategies, setStrategies] = useState([]);
-  const [loadedStrategy, setLoadedStrategy] = useState(initialStrategy);
+  const [savedStrategies, setSavedStrategies] = useState([]);
+  const [loadedStrategy, setLoadedStrategy] = useState({
+    loaded: false,
+    dateStart: "",
+    dateEnd: "",
+    investmentAmount: "",
+    investmentFrequency: "",
+  });
   const [graphView, setGraphView] = useState(true); // graph vs table views
 
   useEffect(() => {
@@ -32,28 +38,17 @@ const App = () => {
   async function fetchStrategies() {
     try {
       const data = await API.graphql(graphqlOperation(listStrategys));
-      // const strategies = data.data.listStrategys.items;
-      setStrategies(data.data.listStrategys.items);
+      setSavedStrategies(data.data.listStrategys.items);
+      const item = data.data.listStrategys.items[0];
+      setLoadedStrategy({
+        loaded: true,
+        dateStart: item.dateStart,
+        dateEnd: item.dateEnd,
+        investmentAmount: item.investmentAmount,
+        investmentFrequency: item.investmentFrequency,
+      });
     } catch (err) {
       console.log("error fetching strategies");
-    }
-  }
-
-  async function handleAddStrategy() {
-    console.log("adding strategy");
-    try {
-      const dummyPayload = {
-        dateStart: "2018-11-11",
-        dateEnd: "2019-05-02",
-        investmentAmount: 200.1,
-        investmentFrequency: "MONTHLY",
-      };
-      setStrategies([...strategies, dummyPayload]);
-      await API.graphql(
-        graphqlOperation(createStrategy, { input: dummyPayload })
-      );
-    } catch (err) {
-      console.log("error creating todo:", err);
     }
   }
 
@@ -61,11 +56,8 @@ const App = () => {
     <div className={"App"}>
       <div className={"saved-strategies"} style={styles.container}>
         <h2>Strategy</h2>
-        <button style={styles.button} onClick={handleAddStrategy}>
-          Save Strategy
-        </button>
         {/* onclick load strategy function to view */}
-        {strategies.map((item) => (
+        {savedStrategies.map((item) => (
           <>
             <p>
               {item.dateStart} to {item.dateEnd} for ${item.investmentAmount}{" "}
@@ -75,11 +67,13 @@ const App = () => {
         ))}
       </div>
       {/* configuration strategy inputs, view toggle + more, states will be held in this function */}
-      <StrategyRules
+      <StrategyControl
         strategy={loadedStrategy}
         handleChange={setLoadedStrategy}
         graphView={graphView}
         setGraphView={setGraphView}
+        savedStrategies={savedStrategies}
+        setSavedStrategies={setSavedStrategies}
       />
       {/* graph view/table views (pass all props to caleld function), 
       this func can manage the view state default is graph. */}
