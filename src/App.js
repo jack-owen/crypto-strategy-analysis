@@ -43,7 +43,7 @@ const App = () => {
       setSavedStrategies(data.data.listStrategys.items);
       const item = data.data.listStrategys.items[0];
       setLoadedStrategy({
-        loaded: true,
+        loaded: true, //! this may break something else, by now using a string instead of boolean
         dateStart: item.dateStart,
         dateEnd: item.dateEnd,
         investmentAmount: item.investmentAmount,

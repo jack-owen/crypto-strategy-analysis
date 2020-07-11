@@ -12,7 +12,9 @@ const StrategyView = (props) => {
 
   // update historicalBPI data for the given strategy parameters
   useEffect(() => {
-    if (!props.strategy.loaded) return; // if strategy is not loaded, quit
+    if (!props.strategy.loaded) {
+      return;
+    } // if strategy is not loaded, quit
     CoindeskAPI(
       props.strategy.dateStart,
       props.strategy.dateEnd,

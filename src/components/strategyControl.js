@@ -20,14 +20,30 @@ const StrategyRules = (props) => {
   const handleChange = (event) => {
     // update this function to use the method below '...' read about this js method
     // setTableView({ ...tableView, [event.target.name]: event.target.checked });
-    const item = {
-      dateStart: props.strategy.dateStart,
-      dateEnd: props.strategy.dateEnd,
-      investmentAmount: props.strategy.investmentAmount,
-      investmentFrequency: props.strategy.investmentFrequency,
+
+    const strategy = {
+      ...props.strategy,
+      [event.target.name]: event.target.value,
     };
-    item[event.target.name] = event.target.value;
-    props.handleChange(item);
+    strategy.loaded = isStrategyValid(strategy);
+    props.handleChange(strategy);
+  };
+
+  const isStrategyValid = (item) => {
+    if (
+      item.dateStart === "" ||
+      item.dateEnd === "" ||
+      item.investmentAmount === "" ||
+      item.investmentFrequency === ""
+    ) {
+      console.log("false");
+      console.log(props.strategy);
+
+      return false;
+    }
+    console.log("true");
+
+    return true;
   };
 
   const handleChangeGraphView = (event) => {
@@ -125,7 +141,7 @@ const StrategyRules = (props) => {
           }
           label="Graph View"
           labelPlacement="start"
-          handle
+          handle="true"
         />
       </FormControl>
       <Button

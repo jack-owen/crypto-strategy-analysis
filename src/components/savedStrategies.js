@@ -36,7 +36,7 @@ const StrategyRules = (props) => {
     <div>
       <h2>Saved Strategies</h2>
       {props.savedStrategies.map((item) => (
-        <>
+        <div key={item}>
           <p>
             {item.dateStart} to {item.dateEnd} for ${item.investmentAmount}{" "}
             every {item.investmentFrequency}
@@ -66,7 +66,7 @@ const StrategyRules = (props) => {
           >
             <RemoveCircleIcon />
           </Button>
-        </>
+        </div>
       ))}
     </div>
   );
