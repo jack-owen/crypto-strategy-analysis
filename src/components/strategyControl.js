@@ -47,6 +47,7 @@ const StrategyRules = (props) => {
   };
 
   const handleChangeGraphView = (event) => {
+    // localStorage.setItem("graphView", event.target.checked);
     props.setGraphView(event.target.checked);
   };
 

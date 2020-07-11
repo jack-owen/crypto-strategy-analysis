@@ -31,7 +31,9 @@ const App = () => {
     investmentAmount: "",
     investmentFrequency: "",
   });
-  const [graphView, setGraphView] = useState(true); // graph vs table views
+  console.log(localStorage.getItem("graphView"));
+
+  const [graphView, setGraphView] = useLocalStorage("graphView", true); // persist state between page refresh graph vs table views
 
   useEffect(() => {
     fetchStrategies();
@@ -80,6 +82,34 @@ const App = () => {
     </div>
   );
 };
+
+// custom hook to persist state between page refresh
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      // Parse stored json or if none return initialValue
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.log(error);
+      return initialValue;
+    }
+  });
+
+  const setValue = (value) => {
+    try {
+      // Allow value to be a function so we have same API as useState
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return [storedValue, setValue];
+}
 
 const styles = {
   container: {
