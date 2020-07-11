@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import { API, graphqlOperation } from "aws-amplify";
 import { createStrategy } from "./../graphql/mutations";
+import { listStrategys } from "./../graphql/queries";
 
 const StrategyRules = (props) => {
   const classes = useStyles();
@@ -36,10 +37,26 @@ const StrategyRules = (props) => {
   async function handleSaveStrategy(event) {
     console.log("adding strategy via btn");
     try {
-      props.setSavedStrategies([...props.savedStrategies, props.strategy]);
+      // props.setSavedStrategies([...props.savedStrategies, props.strategy]); // this line is slightly redundant whilst later hack is in place to get all saved strategies from dynamodb
       await API.graphql(
-        graphqlOperation(createStrategy, { input: props.strategy })
+        graphqlOperation(createStrategy, {
+          input: {
+            dateStart: props.strategy.dateStart,
+            dateEnd: props.strategy.dateEnd,
+            investmentAmount: props.strategy.investmentAmount,
+            investmentFrequency: props.strategy.investmentFrequency,
+          },
+        })
       );
+      // get updated set of saved strategies (to find the id of the new strategy record from dynamodb)
+      // there is a known inefficiency in having to fetch ALL savedStrategy records just to get the id
+      //    of the current added strategy from dynamodb for future integrity
+      try {
+        const data = await API.graphql(graphqlOperation(listStrategys));
+        props.setSavedStrategies(data.data.listStrategys.items);
+      } catch (err) {
+        console.log("error fetching strategies");
+      }
     } catch (err) {
       console.log("error creating todo:", err);
     }

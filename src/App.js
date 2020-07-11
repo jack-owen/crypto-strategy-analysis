@@ -7,6 +7,7 @@ import { listStrategys } from "./graphql/queries";
 // import InputForm from "./components/searchInputForm.js";
 import StrategyView from "./components/strategyView";
 import StrategyControl from "./components/strategyControl";
+import SavedStrategies from "./components/savedStrategies";
 
 const buyFrequencyOptions = {
   daily: "daily",
@@ -24,6 +25,7 @@ const App = () => {
   const [savedStrategies, setSavedStrategies] = useState([]);
   const [loadedStrategy, setLoadedStrategy] = useState({
     loaded: false,
+    id: "",
     dateStart: "",
     dateEnd: "",
     investmentAmount: "",
@@ -57,15 +59,12 @@ const App = () => {
       <div className={"saved-strategies"} style={styles.container}>
         <h2>Strategy</h2>
         {/* onclick load strategy function to view */}
-        {savedStrategies.map((item) => (
-          <>
-            <p>
-              {item.dateStart} to {item.dateEnd} for ${item.investmentAmount}{" "}
-              every {item.investmentFrequency}
-            </p>
-          </>
-        ))}
       </div>
+      <SavedStrategies
+        savedStrategies={savedStrategies}
+        setSavedStrategies={setSavedStrategies}
+        setLoadedStrategy={setLoadedStrategy}
+      />
       {/* configuration strategy inputs, view toggle + more, states will be held in this function */}
       <StrategyControl
         strategy={loadedStrategy}

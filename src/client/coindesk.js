@@ -1,4 +1,5 @@
 function getHistoricalBPI(dateStart, dateEnd, buyFrequency, setHistoricalBPI) {
+  //+ validate dateStart and dateEnd and buyFrequency values before fetch.
   fetch(
     "https://api.coindesk.com/v1/bpi/historical/close.json?start=" +
       dateStart +
@@ -25,7 +26,7 @@ function getHistoricalBPI(dateStart, dateEnd, buyFrequency, setHistoricalBPI) {
     );
 }
 
-// select desired frequency of bitcoin records from daily json records (daily, weekly, monthly)
+// select bpi records that match the desired frequency from the returned json set (e.g. daily, weekly, monthly)
 function frequencySelection(data, buyFrequency) {
   let result = [];
   if (buyFrequency === buyFrequencyOptions.monthly) {
