@@ -58,7 +58,10 @@ const App = () => {
       <Router>
         <Switch>
           <Route path="/dashboard">
-            <Dashboard />
+            <Dashboard
+              savedStrategies={savedStrategies}
+              setLoadedStrategy={setLoadedStrategy}
+            />
           </Route>
           <Route path="/">
             <div className={"saved-strategies"} style={styles.container}>

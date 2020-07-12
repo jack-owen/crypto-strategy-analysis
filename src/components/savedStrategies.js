@@ -5,6 +5,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import Button from "@material-ui/core/button";
 
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+
 const StrategyRules = (props) => {
   const classes = useStyles();
   async function handleSaveStrategy(event) {
@@ -63,6 +70,39 @@ const StrategyRules = (props) => {
     </div>
   );
 };
+
+export const SavedStrategiesList = (props) => (
+  <div>
+    <ListSubheader inset>Saved reports</ListSubheader>
+    {props.savedStrategies.map((item) => (
+      <ListItem
+        button
+        key={item.id}
+        onClick={() => {
+          console.log(item.id + " clicked");
+          props.setLoadedStrategy({
+            loaded: true,
+            dateStart: item.dateStart,
+            dateEnd: item.dateEnd,
+            investmentAmount: item.investmentAmount,
+            investmentFrequency: item.investmentFrequency,
+          });
+        }}
+      >
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            (Date.parse(item.dateEnd) - Date.parse(item.dateStart)) /
+              (1000 * 60 * 60 * 24) +
+            " days" //add options for months when days > 30. and years etc.
+          }
+        />
+      </ListItem>
+    ))}
+  </div>
+);
 
 const useStyles = makeStyles((theme) => ({
   button: {
