@@ -1,25 +1,24 @@
 /* src/App.js */
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
-import { createStrategy } from "./graphql/mutations";
 import { listStrategys } from "./graphql/queries";
-// import StrategyAnalysis from "./components/strategyAnalysis.js";
-// import InputForm from "./components/searchInputForm.js";
 import StrategyView from "./components/strategyView";
 import StrategyControl from "./components/strategyControl";
 import SavedStrategies from "./components/savedStrategies";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Dashboard from "./components/Dashboard";
 
-const buyFrequencyOptions = {
-  daily: "daily",
-  weekly: "weekly",
-  monthly: "monthly",
-};
-const initialStrategy = {
-  dateStart: "2018-11-11",
-  dateEnd: "2019-05-02",
-  investmentAmount: 200.1,
-  investmentFrequency: buyFrequencyOptions.monthly,
-};
+// const buyFrequencyOptions = {
+//   daily: "daily",
+//   weekly: "weekly",
+//   monthly: "monthly",
+// };
+// const initialStrategy = {
+//   dateStart: "2018-11-11",
+//   dateEnd: "2019-05-02",
+//   investmentAmount: 200.1,
+//   investmentFrequency: buyFrequencyOptions.monthly,
+// };
 
 const App = () => {
   const [savedStrategies, setSavedStrategies] = useState([]);
@@ -31,8 +30,6 @@ const App = () => {
     investmentAmount: "",
     investmentFrequency: "",
   });
-  console.log(localStorage.getItem("graphView"));
-
   const [graphView, setGraphView] = useLocalStorage("graphView", true); // persist state between page refresh graph vs table views
 
   useEffect(() => {
@@ -58,27 +55,36 @@ const App = () => {
 
   return (
     <div className={"App"}>
-      <div className={"saved-strategies"} style={styles.container}>
-        <h2>Strategy</h2>
-        {/* onclick load strategy function to view */}
-      </div>
-      <SavedStrategies
-        savedStrategies={savedStrategies}
-        setSavedStrategies={setSavedStrategies}
-        setLoadedStrategy={setLoadedStrategy}
-      />
-      {/* configuration strategy inputs, view toggle + more, states will be held in this function */}
-      <StrategyControl
-        strategy={loadedStrategy}
-        handleChange={setLoadedStrategy}
-        graphView={graphView}
-        setGraphView={setGraphView}
-        savedStrategies={savedStrategies}
-        setSavedStrategies={setSavedStrategies}
-      />
-      {/* graph view/table views (pass all props to caleld function), 
+      <Router>
+        <Switch>
+          <Route path="/dashboard">
+            <Dashboard />
+          </Route>
+          <Route path="/">
+            <div className={"saved-strategies"} style={styles.container}>
+              <h2>Strategy</h2>
+              {/* onclick load strategy function to view */}
+            </div>
+            <SavedStrategies
+              savedStrategies={savedStrategies}
+              setSavedStrategies={setSavedStrategies}
+              setLoadedStrategy={setLoadedStrategy}
+            />
+            {/* configuration strategy inputs, view toggle + more, states will be held in this function */}
+            <StrategyControl
+              strategy={loadedStrategy}
+              handleChange={setLoadedStrategy}
+              graphView={graphView}
+              setGraphView={setGraphView}
+              savedStrategies={savedStrategies}
+              setSavedStrategies={setSavedStrategies}
+            />
+            {/* graph view/table views (pass all props to caleld function), 
       this func can manage the view state default is graph. */}
-      <StrategyView strategy={loadedStrategy} graphView={graphView} />
+            <StrategyView strategy={loadedStrategy} graphView={graphView} />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 };

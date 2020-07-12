@@ -6,16 +6,8 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import Button from "@material-ui/core/button";
 
 const StrategyRules = (props) => {
-  const handleClick = () => {
-    console.log("clicked");
-  };
-
   const classes = useStyles();
-
   async function handleSaveStrategy(event) {
-    console.log("removing strategy via btn");
-    console.log(event);
-
     try {
       await API.graphql(
         graphqlOperation(deleteStrategy, { input: { id: event.id } })

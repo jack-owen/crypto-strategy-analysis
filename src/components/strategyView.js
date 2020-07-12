@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Graph from "../components/graph.js";
 import CoindeskAPI from "./../client/coindesk";
-import { logDOM } from "@testing-library/react";
+// import { logDOM } from "@testing-library/react";
 
 const StrategyView = (props) => {
   const [historicBPI, setHistoricalBPI] = useState({
