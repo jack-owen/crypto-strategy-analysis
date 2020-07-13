@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -21,15 +21,18 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import { mainListItems } from "./listItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
-import Orders from "./Orders";
+import TableOutput from "./TableView";
 import { SavedStrategiesList } from "./savedStrategies";
+import { getStrategyReport } from "./strategyView";
+// import temp from "./strategyView";
+import CoindeskAPI from "./../client/coindesk";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/jack0wen">
+        Jack Owen
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -114,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    height: 240,
+    height: 300,
   },
 }));
 
@@ -128,6 +131,49 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const [historicBPI, setHistoricalBPI] = useState({
+    isLoaded: false,
+    bpi_usd: [],
+  });
+  const [strategyReport, setStrategyReport] = useState([]);
+
+  // update historicalBPI data for the given strategy parameters
+  useEffect(() => {
+    if (!props.strategy.loaded) {
+      return;
+    } // if strategy is not loaded, quit
+    CoindeskAPI(
+      props.strategy.dateStart,
+      props.strategy.dateEnd,
+      props.strategy.investmentFrequency,
+      setHistoricalBPI
+    );
+  }, [
+    props.strategy.loaded,
+    props.strategy.dateStart,
+    props.strategy.dateEnd,
+    props.strategy.investmentFrequency,
+  ]);
+
+  // calculate strategy report for the updated historicalBPI data
+  useEffect(() => {
+    if (!historicBPI.isLoaded) return; // before coindesk api has updated the historical bpi
+    setStrategyReport(getStrategyReport(historicBPI, props.strategy));
+  }, [historicBPI, props.strategy]);
+
+  // create chart graph data
+  let data = [];
+  for (let i = 0; i < strategyReport.length; i++) {
+    const item = strategyReport[i];
+    data.push({
+      name: item.date,
+      invested: item.depositTotal_usd,
+      worth: item.portfolioValue_usd,
+    });
+  }
+
+  // console.log(data);
 
   return (
     <div className={classes.root}>
@@ -192,22 +238,22 @@ export default function Dashboard(props) {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
+            {/* Strategy Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <Chart />
+                <Chart data={data} />
               </Paper>
             </Grid>
-            {/* Recent Deposits */}
+            {/* Report */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
                 <Deposits />
               </Paper>
             </Grid>
-            {/* Recent Orders */}
+            {/* Strategy Breakdown */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Orders />
+                <TableOutput report={strategyReport} />
               </Paper>
             </Grid>
           </Grid>

@@ -61,7 +61,13 @@ const StrategyView = (props) => {
   );
 };
 
-const getStrategyReport = (historicBPI, strategy) => {
+export function temp() {
+  console.log("TEMPORARYYYYY JACK");
+}
+
+// export temp;
+
+export const getStrategyReport = (historicBPI, strategy) => {
   let report = [];
   let investmentTotal_btc = 0;
   let investmentTotal_usd = 0; // usd

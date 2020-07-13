@@ -61,6 +61,7 @@ const App = () => {
             <Dashboard
               savedStrategies={savedStrategies}
               setLoadedStrategy={setLoadedStrategy}
+              strategy={loadedStrategy}
             />
           </Route>
           <Route path="/">
