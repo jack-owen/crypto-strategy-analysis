@@ -112,23 +112,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperSmall = clsx(classes.paper, classes.fixedHeightSmall);
-
+  const [drawOpen, setDrawOpen] = useState(true);
+  const handleDrawerOpen = () => {
+    setDrawOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setDrawOpen(false);
+  };
   const [historicBPI, setHistoricalBPI] = useState({
     isLoaded: false,
     bpi_usd: [],
   });
   const [strategyReport, setStrategyReport] = useState([]);
 
-  // update historicalBPI data for the given strategy parameters
+  // fetch new historic BPI data when the users strategy date start, end or investment frequency changes
   useEffect(() => {
     if (!props.strategy.loaded) {
       return;
@@ -146,33 +145,27 @@ export default function Dashboard(props) {
     props.strategy.investmentFrequency,
   ]);
 
-  // calculate strategy report for the updated historicalBPI data
+  // calculate strategy report analysis for changed historic BPI data or investment amount
   useEffect(() => {
-    if (!historicBPI.isLoaded) return; // before coindesk api has updated the historical bpi
-
-    const getStrategyReport = (historicBPI, strategy) => {
-      let report = [];
-      let investmentTotal_btc = 0;
-      let investmentTotal_usd = 0; // usd
-      const investmentAmount = parseFloat(strategy.investmentAmount);
-      historicBPI.bpi_usd.forEach(function (item) {
-        const bpi = item.bpi;
-        investmentTotal_btc += (1 / bpi) * investmentAmount;
-        investmentTotal_usd += investmentAmount;
-        const portfolioValue_usd = investmentTotal_btc * bpi;
-        report.push({
-          portfolioValue_btc: investmentTotal_btc,
-          portfolioValue_usd: portfolioValue_usd,
-          bpi_usd: bpi, //eg. $9052.5763 unformatted
-          depositTotal_usd: investmentTotal_usd,
-          date: item.date, //eg. "2018-02-01"
-        });
+    let report = [];
+    let investmentTotal_btc = 0;
+    let investmentTotal_usd = 0; // usd
+    const investmentAmount = parseFloat(props.strategy.investmentAmount);
+    historicBPI.bpi_usd.forEach(function (item) {
+      const bpi = item.bpi;
+      investmentTotal_btc += (1 / bpi) * investmentAmount;
+      investmentTotal_usd += investmentAmount;
+      const portfolioValue_usd = investmentTotal_btc * bpi;
+      report.push({
+        portfolioValue_btc: investmentTotal_btc,
+        portfolioValue_usd: portfolioValue_usd,
+        bpi_usd: bpi, //eg. $9052.5763 unformatted
+        depositTotal_usd: investmentTotal_usd,
+        date: item.date, //eg. "2018-02-01"
       });
-      return report;
-    };
-
-    setStrategyReport(getStrategyReport(historicBPI, props.strategy));
-  }, [historicBPI, props.strategy]);
+    });
+    setStrategyReport(report);
+  }, [historicBPI, props.strategy.investmentAmount]);
 
   // create chart graph data
   let data = [];
@@ -190,7 +183,7 @@ export default function Dashboard(props) {
       <CssBaseline />
       <AppBar
         position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
+        className={clsx(classes.appBar, drawOpen && classes.appBarShift)}
       >
         <Toolbar className={classes.toolbar}>
           <IconButton
@@ -200,7 +193,7 @@ export default function Dashboard(props) {
             onClick={handleDrawerOpen}
             className={clsx(
               classes.menuButton,
-              open && classes.menuButtonHidden
+              drawOpen && classes.menuButtonHidden
             )}
           >
             <MenuIcon />
@@ -224,9 +217,12 @@ export default function Dashboard(props) {
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          paper: clsx(
+            classes.drawerPaper,
+            !drawOpen && classes.drawerPaperClose
+          ),
         }}
-        open={open}
+        open={drawOpen}
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
@@ -249,7 +245,7 @@ export default function Dashboard(props) {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Control */}
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={10} lg={9}>
               {/* <Paper className={fixedHeightPaper}> */}
               <Paper className={fixedHeightPaperSmall}>
                 <Control
@@ -261,7 +257,7 @@ export default function Dashboard(props) {
               </Paper>
             </Grid>
             {/* Hint */}
-            <Grid item xs={1} md={4} lg={3}>
+            <Grid item xs={1} md={2} lg={3}>
               <Paper className={fixedHeightPaperSmall} elevation={0}>
                 {/* <Hint /> */}
                 <p>
