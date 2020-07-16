@@ -49,7 +49,7 @@ const App = () => {
         investmentFrequency: item.investmentFrequency,
       });
     } catch (err) {
-      console.log("error fetching strategies");
+      console.log("error fetching strategies from AppSync & DynamoDB");
     }
   }
 
@@ -62,6 +62,8 @@ const App = () => {
               savedStrategies={savedStrategies}
               setLoadedStrategy={setLoadedStrategy}
               strategy={loadedStrategy}
+              // handleChange={setLoadedStrategy}
+              setSavedStrategies={setSavedStrategies}
             />
           </Route>
           <Route path="/">

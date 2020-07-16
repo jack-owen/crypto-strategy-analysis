@@ -1,6 +1,6 @@
 {
 	"api": {
-		"myapi": {
+		"cryptostrategy": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {

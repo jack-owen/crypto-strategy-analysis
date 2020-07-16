@@ -12,6 +12,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { API, graphqlOperation } from "aws-amplify";
 import { createStrategy } from "./../graphql/mutations";
 import { listStrategys } from "./../graphql/queries";
+import Title from "./Title";
 
 const StrategyRules = (props) => {
   const classes = useStyles();
@@ -38,11 +39,9 @@ const StrategyRules = (props) => {
     ) {
       console.log("false");
       console.log(props.strategy);
-
       return false;
     }
     console.log("true");
-
     return true;
   };
 
@@ -81,7 +80,8 @@ const StrategyRules = (props) => {
 
   return (
     <div className="strategy-rules">
-      <h2>Strategy Control</h2>
+      <Title>Control</Title>
+
       <TextField
         id="date"
         label="start"

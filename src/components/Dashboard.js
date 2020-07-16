@@ -20,11 +20,11 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { mainListItems } from "./listItems";
 import Chart from "./Chart";
-import Deposits from "./Deposits";
+import ReportSummary from "./ReportSummary";
 import TableOutput from "./TableView";
 import { SavedStrategiesList } from "./savedStrategies";
 import { getStrategyReport } from "./strategyView";
-// import temp from "./strategyView";
+import Control from "./Control";
 import CoindeskAPI from "./../client/coindesk";
 
 function Copyright() {
@@ -173,8 +173,6 @@ export default function Dashboard(props) {
     });
   }
 
-  // console.log(data);
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -238,6 +236,17 @@ export default function Dashboard(props) {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
+            {/* Control */}
+            <Grid item xs={12} md={8} lg={6}>
+              <Paper className={fixedHeightPaper}>
+                <Control
+                  strategy={props.strategy}
+                  handleChange={props.setLoadedStrategy}
+                  // savedStrategies={props.savedStrategies}
+                  setSavedStrategies={props.setSavedStrategies}
+                />
+              </Paper>
+            </Grid>
             {/* Strategy Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
@@ -247,7 +256,7 @@ export default function Dashboard(props) {
             {/* Report */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Deposits />
+                <ReportSummary report={strategyReport} />
               </Paper>
             </Grid>
             {/* Strategy Breakdown */}

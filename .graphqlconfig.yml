@@ -1,5 +1,5 @@
 projects:
-  myapi:
+  cryptostrategy:
     schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js
