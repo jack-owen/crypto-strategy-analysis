@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
-  // check below to 'end'
   container: {
     display: "flex",
     flexWrap: "wrap",
@@ -33,13 +32,12 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    // width: 200,
-    // width: "100%",
+    maxWidth: "168px",
+    width: "100%",
   },
   formControl: {
     // marginLeft: theme.spacing(1),
     // marginRight: theme.spacing(1),
-    // minWidth: 120,
     width: "100%",
   },
   selectEmpty: {
@@ -48,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
-  // end
 }));
 
 const StrategyRules = (props) => {
@@ -112,7 +109,7 @@ const StrategyRules = (props) => {
       <Title>Control</Title>
       <div className={classes.root}>
         <Grid container spacing={1}>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <TextField
               id="date"
@@ -128,7 +125,7 @@ const StrategyRules = (props) => {
             />
             {/* </Paper> */}
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <TextField
               id="date"
@@ -144,9 +141,9 @@ const StrategyRules = (props) => {
             />
             {/* </Paper> */}
           </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-          <Grid item xs={3}>
+          {/* </Grid>
+        <Grid container spacing={1}> */}
+          <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <TextField
               id="standard-basic"
@@ -158,7 +155,7 @@ const StrategyRules = (props) => {
             />
             {/* </Paper> */}
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-simple-select-label">Frequency</InputLabel>

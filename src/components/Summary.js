@@ -10,13 +10,12 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Deposits(props) {
+export default function Summary(props) {
   const classes = useStyles();
-
   let last = "";
   let first = "";
   let depositTotal_usd = "";
-  let portfolioValue_btc = "";
+  // let portfolioValue_btc = "";
   let portfolioValue_usd = "";
   let totalReturn_value = "";
   let totalReturn_pct = "";
@@ -25,7 +24,7 @@ export default function Deposits(props) {
     last = props.report[props.report.length - 1];
     first = props.report[0];
     depositTotal_usd = last.depositTotal_usd;
-    portfolioValue_btc = last.portfolioValue_btc;
+    // portfolioValue_btc = last.portfolioValue_btc;
     portfolioValue_usd = last.portfolioValue_usd;
     totalReturn_value = portfolioValue_usd - depositTotal_usd;
     totalReturn_pct = Number.parseFloat(
@@ -57,7 +56,7 @@ export default function Deposits(props) {
         {totalReturn_pct}%
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        Return over {period_days}
+        return over {period_days}
       </Typography>
 
       {expand === true ? (
@@ -66,7 +65,7 @@ export default function Deposits(props) {
             {longToUSD(depositTotal_usd)}
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
-            deposited
+            deposit total
           </Typography>
           <Typography component="p" variant="h5">
             {longToUSD(portfolioValue_usd)}

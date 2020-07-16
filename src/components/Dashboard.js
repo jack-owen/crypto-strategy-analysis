@@ -14,49 +14,17 @@ import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import { mainListItems } from "./listItems";
 import Chart from "./Chart";
-import ReportSummary from "./ReportSummary";
-import TableOutput from "./TableView";
+import Summary from "./Summary";
+import TableOutput from "./Breakdown";
 import { SavedStrategiesList } from "./savedStrategies";
-import { getStrategyReport } from "./strategyView";
 import Control from "./Control";
 import CoindeskAPI from "./../client/coindesk";
-
-//temporary
-// import { makeStyles } from '@material-ui/core/styles';
-// import List from '@material-ui/core/List';
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-// import IconButton from '@material-ui/core/IconButton';
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-// import Grid from '@material-ui/core/Grid';
-// import Typography from '@material-ui/core/Typography';
-import FolderIcon from "@material-ui/icons/Folder";
-import DeleteIcon from "@material-ui/icons/Delete";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://github.com/jack0wen">
-        Jack Owen
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { mainListItems } from "./SideBarItems";
+import Copyright from "./Copyright";
 
 const drawerWidth = 240;
 
@@ -137,6 +105,9 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 300,
   },
+  fixedHeightSmall: {
+    height: 180,
+  },
 }));
 
 export default function Dashboard(props) {
@@ -149,6 +120,7 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaperSmall = clsx(classes.paper, classes.fixedHeightSmall);
 
   const [historicBPI, setHistoricalBPI] = useState({
     isLoaded: false,
@@ -177,6 +149,28 @@ export default function Dashboard(props) {
   // calculate strategy report for the updated historicalBPI data
   useEffect(() => {
     if (!historicBPI.isLoaded) return; // before coindesk api has updated the historical bpi
+
+    const getStrategyReport = (historicBPI, strategy) => {
+      let report = [];
+      let investmentTotal_btc = 0;
+      let investmentTotal_usd = 0; // usd
+      const investmentAmount = parseFloat(strategy.investmentAmount);
+      historicBPI.bpi_usd.forEach(function (item) {
+        const bpi = item.bpi;
+        investmentTotal_btc += (1 / bpi) * investmentAmount;
+        investmentTotal_usd += investmentAmount;
+        const portfolioValue_usd = investmentTotal_btc * bpi;
+        report.push({
+          portfolioValue_btc: investmentTotal_btc,
+          portfolioValue_usd: portfolioValue_usd,
+          bpi_usd: bpi, //eg. $9052.5763 unformatted
+          depositTotal_usd: investmentTotal_usd,
+          date: item.date, //eg. "2018-02-01"
+        });
+      });
+      return report;
+    };
+
     setStrategyReport(getStrategyReport(historicBPI, props.strategy));
   }, [historicBPI, props.strategy]);
 
@@ -242,7 +236,6 @@ export default function Dashboard(props) {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        {/* <List>{SavedStrategiesList}</List> */}
         <List>
           <SavedStrategiesList
             savedStrategies={props.savedStrategies}
@@ -256,14 +249,26 @@ export default function Dashboard(props) {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Control */}
-            <Grid item xs={12} md={8} lg={6}>
-              <Paper className={fixedHeightPaper}>
+            <Grid item xs={12} md={8} lg={9}>
+              {/* <Paper className={fixedHeightPaper}> */}
+              <Paper className={fixedHeightPaperSmall}>
                 <Control
                   strategy={props.strategy}
                   handleChange={props.setLoadedStrategy}
                   // savedStrategies={props.savedStrategies}
                   setSavedStrategies={props.setSavedStrategies}
                 />
+              </Paper>
+            </Grid>
+            {/* Hint */}
+            <Grid item xs={1} md={4} lg={3}>
+              <Paper className={fixedHeightPaperSmall} elevation={0}>
+                {/* <Hint /> */}
+                <p>
+                  Enter your strategy conditions in the control section to test
+                  the performance of a particular purchase method and save the
+                  strategy in AWS DynamoDB by selecting 'Save'
+                </p>
               </Paper>
             </Grid>
             {/* Strategy Chart */}
@@ -275,7 +280,7 @@ export default function Dashboard(props) {
             {/* Report */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <ReportSummary report={strategyReport} />
+                <Summary report={strategyReport} />
               </Paper>
             </Grid>
             {/* Strategy Breakdown */}
