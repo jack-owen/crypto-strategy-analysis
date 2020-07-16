@@ -25,6 +25,7 @@ import Control from "./Control";
 import CoindeskAPI from "./../client/coindesk";
 import { mainListItems } from "./SideBarItems";
 import Copyright from "./Copyright";
+import Hidden from "@material-ui/core/Hidden";
 
 const drawerWidth = 240;
 
@@ -106,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
     height: 300,
   },
   fixedHeightSmall: {
-    height: 180,
+    minHeight: 180,
   },
 }));
 
@@ -257,15 +258,18 @@ export default function Dashboard(props) {
               </Paper>
             </Grid>
             {/* Hint */}
-            <Grid item xs={1} md={2} lg={3}>
-              <Paper className={fixedHeightPaperSmall} elevation={0}>
-                {/* <Hint /> */}
-                <p>
-                  Enter your strategy conditions in the control section to test
-                  the performance of a particular purchase method and save the
-                  strategy in AWS DynamoDB by selecting 'Save'
-                </p>
-              </Paper>
+
+            <Grid item lg={3}>
+              <Hidden mdDown>
+                <Paper className={fixedHeightPaperSmall} elevation={0}>
+                  {/* <Hint /> */}
+                  <p>
+                    Enter your strategy conditions in the control section to
+                    test the performance of a particular purchase method and
+                    save the strategy in AWS DynamoDB by selecting 'Save'
+                  </p>
+                </Paper>
+              </Hidden>
             </Grid>
             {/* Strategy Chart */}
             <Grid item xs={12} md={8} lg={9}>
