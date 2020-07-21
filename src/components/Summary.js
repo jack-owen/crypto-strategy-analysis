@@ -50,7 +50,9 @@ export default function Summary(props) {
     <React.Fragment>
       <Title>Summary</Title>
       <Typography component="p" variant="h4">
+        {/* <div data-testid="summary-total-return"> */}
         {longToUSD(totalReturn_value)}
+        {/* </div> */}
       </Typography>
       <Typography component="p" variant="h5">
         {totalReturn_pct}%

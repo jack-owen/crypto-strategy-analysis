@@ -15,6 +15,7 @@ import { listStrategys } from "../graphql/queries";
 import Title from "./Title";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import NativeSelect from "@material-ui/core/NativeSelect";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
+    // marginLeft: theme.spacing(1),
+    // marginRight: theme.spacing(1),
     maxWidth: "168px",
     width: "100%",
   },
@@ -68,8 +69,6 @@ const StrategyRules = (props) => {
       item.investmentAmount === "" ||
       item.investmentFrequency === ""
     ) {
-      console.log("false");
-      console.log(props.strategy);
       return false;
     }
     console.log("true");
@@ -106,13 +105,13 @@ const StrategyRules = (props) => {
 
   return (
     <div className="strategy-rules">
-      <Title>Control</Title>
+      <Title>Control me</Title>
       <div className={classes.root}>
         <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <TextField
-              id="date"
+              id="dateStart"
               label="start"
               type="date"
               value={props.strategy.dateStart}
@@ -128,7 +127,7 @@ const StrategyRules = (props) => {
           <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <TextField
-              id="date"
+              id="dateEnd"
               label="end"
               type="date"
               value={props.strategy.dateEnd}
@@ -158,10 +157,12 @@ const StrategyRules = (props) => {
           <Grid item xs={12} md={6} lg={3}>
             {/* <Paper className={classes.paper}> */}
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">Frequency</InputLabel>
+              <InputLabel htmlFor="frequency-select" id="frequency-label">
+                Frequency
+              </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId="frequency-label"
+                id="frequency-select"
                 name="investmentFrequency"
                 value={props.strategy.investmentFrequency}
                 className={classes.textField}
@@ -171,7 +172,20 @@ const StrategyRules = (props) => {
                 <MenuItem value={"weekly"}>Weekly</MenuItem>
                 <MenuItem value={"monthly"}>Monthly</MenuItem>
               </Select>
+              {/* NativeSelect is a temporary replacement to the MUI select component, due to issue with testing not able to locate ids/aria/forHTML */}
+              {/* <InputLabel htmlFor="frequency-select">Frequency</InputLabel>
+              <NativeSelect
+                id="frequency-select"
+                name="investmentFrequency"
+                value={props.strategy.investmentFrequency}
+                onChange={handleChange}
+              >
+                <option value={"daily"}>Daily</option>
+                <option value={"weekly"}>Weekly</option>
+                <option value={"monthly"}>Monthly</option>
+              </NativeSelect> */}
             </FormControl>
+
             {/* </Paper> */}
           </Grid>
           <Grid item xs={3}>

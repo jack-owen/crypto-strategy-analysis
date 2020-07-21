@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Control from "./../components/Control";
 
 describe("Strategy Controls", () => {
@@ -26,6 +26,7 @@ describe("Strategy Controls", () => {
     expect(element).toBeInTheDocument();
 
     // test button click saves the strategy data to the parent state (userEvent)
+    fireEvent.click(element);
   });
 
   test("strategy start date input", () => {

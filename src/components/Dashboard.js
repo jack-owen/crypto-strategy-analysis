@@ -277,7 +277,7 @@ export default function Dashboard(props) {
                 <Chart data={data} />
               </Paper>
             </Grid>
-            {/* Report */}
+            {/* Summary */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
                 <Summary report={strategyReport} />

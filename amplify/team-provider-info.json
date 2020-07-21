@@ -10,6 +10,14 @@
             "StackName": "amplify-cryptostrategy-dev-120650",
             "StackId": "arn:aws:cloudformation:eu-west-2:396043611315:stack/amplify-cryptostrategy-dev-120650/cb83e1a0-bf78-11ea-9a02-0622cd7b28da",
             "AmplifyAppId": "dvuwwkeqt6ocs"
+        },
+        "categories": {
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "dvuwwkeqt6ocs",
+                    "type": "manual"
+                }
+            }
         }
     }
 }
