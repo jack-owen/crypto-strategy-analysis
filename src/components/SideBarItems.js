@@ -14,13 +14,13 @@ import StarIcon from "@material-ui/icons/Star";
 
 export const mainListItems = (
   <div>
-    <ListItem button>
+    <ListItem button disabled>
       <ListItemIcon>
         <StarIcon />
       </ListItemIcon>
       <ListItemText primary="Recommended" />
     </ListItem>
-    <ListItem button>
+    <ListItem button disabled>
       <ListItemIcon>
         <CompareArrowsIcon />
       </ListItemIcon>

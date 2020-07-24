@@ -12,11 +12,8 @@
             "AmplifyAppId": "dvuwwkeqt6ocs"
         },
         "categories": {
-            "hosting": {
-                "amplifyhosting": {
-                    "appId": "dvuwwkeqt6ocs",
-                    "type": "manual"
-                }
+            "auth": {
+                "cryptostrategy15bf29af": {}
             }
         }
     }

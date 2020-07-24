@@ -26,6 +26,7 @@ import CoindeskAPI from "./../client/coindesk";
 import { mainListItems } from "./SideBarItems";
 import Copyright from "./Copyright";
 import Hidden from "@material-ui/core/Hidden";
+import { AmplifySignOut } from "@aws-amplify/ui-react";
 
 const drawerWidth = 240;
 
@@ -208,6 +209,7 @@ export default function Dashboard(props) {
           >
             Crypto Strategy Analysis
           </Typography>
+          <AmplifySignOut />
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />

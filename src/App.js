@@ -6,6 +6,7 @@ import { listStrategys } from "./graphql/queries";
 // import StrategyControl from "./components/strategyControl";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
+import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 
 const App = () => {
   const [savedStrategies, setSavedStrategies] = useState([]);
@@ -108,4 +109,5 @@ const styles = {
   },
 };
 
-export default App;
+// export default App;
+export default withAuthenticator(App);

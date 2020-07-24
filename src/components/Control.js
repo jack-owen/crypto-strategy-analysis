@@ -105,7 +105,7 @@ const StrategyRules = (props) => {
 
   return (
     <div className="strategy-rules">
-      <Title>Control me</Title>
+      <Title>Control</Title>
       <div className={classes.root}>
         <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={3}>

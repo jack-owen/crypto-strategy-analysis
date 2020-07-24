@@ -1,5 +1,11 @@
 {
     "AppSyncApiName": "cryptostrategy",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
-    "DynamoDBEnableServerSideEncryption": "false"
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcryptostrategy15bf29af",
+            "Outputs.UserPoolId"
+        ]
+    }
 }

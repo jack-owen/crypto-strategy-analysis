@@ -11,6 +11,7 @@ export const getStrategy = /* GraphQL */ `
       investmentFrequency
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -29,6 +30,7 @@ export const listStrategys = /* GraphQL */ `
         investmentFrequency
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

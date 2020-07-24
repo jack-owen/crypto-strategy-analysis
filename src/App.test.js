@@ -48,7 +48,7 @@ describe("App", () => {
 describe("Dashboard", () => {
   test("strategy control section loaded", () => {
     const { getByText } = render(<App />);
-    expect(getByText("Control")).toBeInTheDocument();
+    expect(getByText(/Control/i)).toBeInTheDocument();
   });
 
   test("Strategy chart section loaded", () => {

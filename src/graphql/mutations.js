@@ -14,6 +14,7 @@ export const createStrategy = /* GraphQL */ `
       investmentFrequency
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -30,6 +31,7 @@ export const updateStrategy = /* GraphQL */ `
       investmentFrequency
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -46,6 +48,7 @@ export const deleteStrategy = /* GraphQL */ `
       investmentFrequency
       createdAt
       updatedAt
+      owner
     }
   }
 `;
