@@ -5,3 +5,11 @@ type Strategy @model @auth(rules: [{ allow: owner }]) {
   investmentAmount: Float
   investmentFrequency: String
 }
+
+type StrategyRecommended @model @auth(rules: [{ allow: private }]) {
+  id: ID!
+  dateStart: AWSDate
+  dateEnd: AWSDate
+  investmentAmount: Float
+  investmentFrequency: String
+}

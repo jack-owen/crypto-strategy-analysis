@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
-import { deleteStrategy } from "./../graphql/mutations";
-import { makeStyles } from "@material-ui/core/styles";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import Button from "@material-ui/core/button";
-
+import { deleteStrategy } from "../graphql/mutations";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";

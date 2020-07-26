@@ -1,12 +1,9 @@
-/* src/App.js */
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import { listStrategys } from "./graphql/queries";
-// import StrategyView from "./components/strategyView";
-// import StrategyControl from "./components/strategyControl";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
+import { withAuthenticator } from "@aws-amplify/ui-react";
 
 const App = () => {
   const [savedStrategies, setSavedStrategies] = useState([]);
@@ -64,32 +61,32 @@ const App = () => {
 };
 
 // custom hook to persist state between page refresh
-function useLocalStorage(key, initialValue) {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      // Parse stored json or if none return initialValue
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.log(error);
-      return initialValue;
-    }
-  });
+// function useLocalStorage(key, initialValue) {
+//   const [storedValue, setStoredValue] = useState(() => {
+//     try {
+//       const item = window.localStorage.getItem(key);
+//       // Parse stored json or if none return initialValue
+//       return item ? JSON.parse(item) : initialValue;
+//     } catch (error) {
+//       console.log(error);
+//       return initialValue;
+//     }
+//   });
 
-  const setValue = (value) => {
-    try {
-      // Allow value to be a function so we have same API as useState
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+//   const setValue = (value) => {
+//     try {
+//       // Allow value to be a function so we have same API as useState
+//       const valueToStore =
+//         value instanceof Function ? value(storedValue) : value;
+//       setStoredValue(valueToStore);
+//       window.localStorage.setItem(key, JSON.stringify(valueToStore));
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
 
-  return [storedValue, setValue];
-}
+//   return [storedValue, setValue];
+// }
 
 const styles = {
   container: {

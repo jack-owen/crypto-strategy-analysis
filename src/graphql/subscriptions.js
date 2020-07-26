@@ -43,3 +43,42 @@ export const onDeleteStrategy = /* GraphQL */ `
     }
   }
 `;
+export const onCreateStrategyRecommended = /* GraphQL */ `
+  subscription OnCreateStrategyRecommended {
+    onCreateStrategyRecommended {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStrategyRecommended = /* GraphQL */ `
+  subscription OnUpdateStrategyRecommended {
+    onUpdateStrategyRecommended {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStrategyRecommended = /* GraphQL */ `
+  subscription OnDeleteStrategyRecommended {
+    onDeleteStrategyRecommended {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;

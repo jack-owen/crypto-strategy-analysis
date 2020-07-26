@@ -12,21 +12,16 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import Chart from "./Chart";
-import Summary from "./Summary";
-import TableOutput from "./Breakdown";
-import { SavedStrategiesList } from "./savedStrategies";
-import Control from "./Control";
+import { SavedStrategiesList } from "./SavedStrategies";
 import CoindeskAPI from "./../client/coindesk";
-import { mainListItems } from "./SideBarItems";
+import SideBarItems from "./SideBarItems";
 import Copyright from "./Copyright";
-import Hidden from "@material-ui/core/Hidden";
 import { AmplifySignOut } from "@aws-amplify/ui-react";
+import SingleStrategyView from "./SingleStrategyView";
+import RecommendedView from "./RecommendedView";
 
 const drawerWidth = 240;
 
@@ -98,24 +93,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
-  },
-  fixedHeight: {
-    height: 300,
-  },
-  fixedHeightSmall: {
-    minHeight: 180,
-  },
 }));
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  const fixedHeightPaperSmall = clsx(classes.paper, classes.fixedHeightSmall);
   const [drawOpen, setDrawOpen] = useState(true);
   const handleDrawerOpen = () => {
     setDrawOpen(true);
@@ -128,6 +109,7 @@ export default function Dashboard(props) {
     bpi_usd: [],
   });
   const [strategyReport, setStrategyReport] = useState([]);
+  const [recommendedView, setRecommendedView] = useState(true);
 
   // fetch new historic BPI data when the users strategy date start, end or investment frequency changes
   useEffect(() => {
@@ -233,7 +215,9 @@ export default function Dashboard(props) {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+          <SideBarItems setRecommendedView={setRecommendedView} />
+        </List>
         <Divider />
         <List>
           <SavedStrategiesList
@@ -246,52 +230,18 @@ export default function Dashboard(props) {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Control */}
-            <Grid item xs={12} md={10} lg={9}>
-              {/* <Paper className={fixedHeightPaper}> */}
-              <Paper className={fixedHeightPaperSmall}>
-                <Control
-                  strategy={props.strategy}
-                  handleChange={props.setLoadedStrategy}
-                  // savedStrategies={props.savedStrategies}
-                  setSavedStrategies={props.setSavedStrategies}
-                />
-              </Paper>
-            </Grid>
-            {/* Hint */}
+          {recommendedView ? (
+            <RecommendedView setLoadedStrategy={props.setLoadedStrategy} />
+          ) : (
+            <SingleStrategyView
+              strategy={props.strategy}
+              setLoadedStrategy={props.setLoadedStrategy}
+              setSavedStrategies={props.setSavedStrategies}
+              data={data}
+              strategyReport={strategyReport}
+            />
+          )}
 
-            <Grid item lg={3}>
-              <Hidden mdDown>
-                <Paper className={fixedHeightPaperSmall} elevation={0}>
-                  {/* <Hint /> */}
-                  <p>
-                    Enter your strategy conditions in the control section to
-                    test the performance of a particular purchase method and
-                    save the strategy in AWS DynamoDB by selecting 'Save'
-                  </p>
-                </Paper>
-              </Hidden>
-            </Grid>
-            {/* Strategy Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart data={data} />
-              </Paper>
-            </Grid>
-            {/* Summary */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Summary report={strategyReport} />
-              </Paper>
-            </Grid>
-            {/* Strategy Breakdown */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <TableOutput report={strategyReport} />
-              </Paper>
-            </Grid>
-          </Grid>
           <Box pt={4}>
             <Copyright />
           </Box>

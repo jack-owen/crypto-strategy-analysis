@@ -36,3 +36,40 @@ export const listStrategys = /* GraphQL */ `
     }
   }
 `;
+export const getStrategyRecommended = /* GraphQL */ `
+  query GetStrategyRecommended($id: ID!) {
+    getStrategyRecommended(id: $id) {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listStrategyRecommendeds = /* GraphQL */ `
+  query ListStrategyRecommendeds(
+    $filter: ModelStrategyRecommendedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStrategyRecommendeds(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        dateStart
+        dateEnd
+        investmentAmount
+        investmentFrequency
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

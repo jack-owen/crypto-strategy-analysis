@@ -5,17 +5,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import { API, graphqlOperation } from "aws-amplify";
 import { createStrategy } from "../graphql/mutations";
 import { listStrategys } from "../graphql/queries";
 import Title from "./Title";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import NativeSelect from "@material-ui/core/NativeSelect";
 
 const useStyles = makeStyles((theme) => ({
   root: {

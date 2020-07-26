@@ -52,3 +52,51 @@ export const deleteStrategy = /* GraphQL */ `
     }
   }
 `;
+export const createStrategyRecommended = /* GraphQL */ `
+  mutation CreateStrategyRecommended(
+    $input: CreateStrategyRecommendedInput!
+    $condition: ModelStrategyRecommendedConditionInput
+  ) {
+    createStrategyRecommended(input: $input, condition: $condition) {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStrategyRecommended = /* GraphQL */ `
+  mutation UpdateStrategyRecommended(
+    $input: UpdateStrategyRecommendedInput!
+    $condition: ModelStrategyRecommendedConditionInput
+  ) {
+    updateStrategyRecommended(input: $input, condition: $condition) {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStrategyRecommended = /* GraphQL */ `
+  mutation DeleteStrategyRecommended(
+    $input: DeleteStrategyRecommendedInput!
+    $condition: ModelStrategyRecommendedConditionInput
+  ) {
+    deleteStrategyRecommended(input: $input, condition: $condition) {
+      id
+      dateStart
+      dateEnd
+      investmentAmount
+      investmentFrequency
+      createdAt
+      updatedAt
+    }
+  }
+`;

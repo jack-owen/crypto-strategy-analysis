@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "cryptostrategy15bf29af_identitypool_15bf29af",
+    "identityPoolName": "cryptostrategyf9281bbb_identitypool_f9281bbb",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "crypto15bf29af",
-    "userPoolName": "cryptostrategy15bf29af_userpool_15bf29af",
+    "resourceNameTruncated": "cryptof9281bbb",
+    "userPoolName": "cryptostrategyf9281bbb_userpool_f9281bbb",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "crypto15bf29af_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "cryptof9281bbb_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "15bf29af",
-    "resourceName": "cryptostrategy15bf29af",
+    "sharedId": "f9281bbb",
+    "resourceName": "cryptostrategyf9281bbb",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
