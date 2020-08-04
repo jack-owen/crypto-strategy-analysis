@@ -42,19 +42,19 @@ const App = () => {
   });
   const classes = useStyles();
   const [drawOpen, setDrawOpen] = useState(true);
+  const [historicBPI, setHistoricalBPI] = useState({
+    isLoaded: false,
+    bpi_usd: [],
+  });
+  const [strategyReport, setStrategyReport] = useState([]);
+  const [recommendedView, setRecommendedView] = useState(false);
+  const [user, setUser] = useState("none");
   const handleDrawerOpen = () => {
     setDrawOpen(true);
   };
   const handleDrawerClose = () => {
     setDrawOpen(false);
   };
-  const [historicBPI, setHistoricalBPI] = useState({
-    isLoaded: false,
-    bpi_usd: [],
-  });
-  const [strategyReport, setStrategyReport] = useState([]);
-  const [recommendedView, setRecommendedView] = useState(true);
-  const [user, setUser] = useState("none");
 
   useEffect(() => {
     fetchStrategies();
