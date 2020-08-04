@@ -12,4 +12,6 @@ type StrategyRecommended @model @auth(rules: [{ allow: private }]) {
   dateEnd: AWSDate
   investmentAmount: Float
   investmentFrequency: String
+  duration: Int
+  returnAmount: Float
 }

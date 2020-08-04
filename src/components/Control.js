@@ -8,7 +8,10 @@ import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import { API, graphqlOperation } from "aws-amplify";
-import { createStrategy } from "../graphql/mutations";
+import {
+  createStrategy,
+  createStrategyRecommended,
+} from "../graphql/mutations";
 import { listStrategys } from "../graphql/queries";
 import Title from "./Title";
 import Grid from "@material-ui/core/Grid";
@@ -197,6 +200,7 @@ const StrategyRules = (props) => {
             >
               Save
             </Button>
+
             {/* </Paper> */}
           </Grid>
         </Grid>

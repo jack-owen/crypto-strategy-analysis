@@ -51,6 +51,8 @@ export const onCreateStrategyRecommended = /* GraphQL */ `
       dateEnd
       investmentAmount
       investmentFrequency
+      duration
+      returnAmount
       createdAt
       updatedAt
     }
@@ -64,6 +66,8 @@ export const onUpdateStrategyRecommended = /* GraphQL */ `
       dateEnd
       investmentAmount
       investmentFrequency
+      duration
+      returnAmount
       createdAt
       updatedAt
     }
@@ -77,6 +81,8 @@ export const onDeleteStrategyRecommended = /* GraphQL */ `
       dateEnd
       investmentAmount
       investmentFrequency
+      duration
+      returnAmount
       createdAt
       updatedAt
     }

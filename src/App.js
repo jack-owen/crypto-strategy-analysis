@@ -53,7 +53,7 @@ const App = () => {
     bpi_usd: [],
   });
   const [strategyReport, setStrategyReport] = useState([]);
-  const [recommendedView, setRecommendedView] = useState(false);
+  const [recommendedView, setRecommendedView] = useState(true);
   const [user, setUser] = useState("none");
 
   useEffect(() => {
@@ -217,7 +217,10 @@ const App = () => {
           </div>
           <Divider />
           <List>
-            <SideBarItems setRecommendedView={setRecommendedView} />
+            <SideBarItems
+              setRecommendedView={setRecommendedView}
+              setLoadedStrategy={setLoadedStrategy}
+            />
           </List>
           <Divider />
           <List>
@@ -232,7 +235,10 @@ const App = () => {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             {recommendedView ? (
-              <RecommendedView setLoadedStrategy={setLoadedStrategy} />
+              <RecommendedView
+                setLoadedStrategy={setLoadedStrategy}
+                setRecommendedView={setRecommendedView}
+              />
             ) : (
               <SingleStrategyView
                 strategy={loadedStrategy}
