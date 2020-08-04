@@ -50,6 +50,7 @@ const StrategyRules = (props) => {
 
   //+ add input validation checks
   const handleChange = (event) => {
+    console.log(event.target.name + ": " + event.target.value);
     const strategy = {
       ...props.strategy,
       [event.target.name]: event.target.value,
@@ -95,12 +96,12 @@ const StrategyRules = (props) => {
         console.log("error fetching strategies");
       }
     } catch (err) {
-      console.log("error creating todo:", err);
+      console.log("error creating strategy:", err);
     }
   }
 
   return (
-    <div className="strategy-rules">
+    <div className="strategy-controls">
       <Title>Control</Title>
       <div className={classes.root}>
         <Grid container spacing={1}>

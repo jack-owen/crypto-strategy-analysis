@@ -4,13 +4,14 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
 import StarIcon from "@material-ui/icons/Star";
+import HomeIcon from "@material-ui/icons/Home";
 
 export default function SideBarItems({ setRecommendedView }) {
   return (
     <div>
       <ListItem button onClick={() => setRecommendedView(false)}>
         <ListItemIcon>
-          <StarIcon />
+          <HomeIcon />
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>

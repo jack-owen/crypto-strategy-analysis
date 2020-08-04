@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import Control from "./../components/Control";
+import Control from "../components/Control";
 
 describe("Strategy Controls", () => {
   const strategy = {
