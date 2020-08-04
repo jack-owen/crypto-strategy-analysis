@@ -9,7 +9,7 @@
 					"defaultAuthentication": {
 						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
 						"userPoolConfig": {
-							"userPoolId": "authcryptostrategyf9281bbb"
+							"userPoolId": "authcryptostrategy7e1c693a"
 						}
 					}
 				}
@@ -18,7 +18,7 @@
 	},
 	"hosting": {},
 	"auth": {
-		"cryptostrategyf9281bbb": {
+		"cryptostrategy7e1c693a": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],

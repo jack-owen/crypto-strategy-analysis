@@ -1,6 +1,6 @@
 projects:
   cryptostrategy:
-    schemaPath: amplify/backend/api/cryptostrategy/build/schema.graphql
+    schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js
     excludes:
@@ -10,9 +10,3 @@ projects:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src/graphql
-        region: eu-west-2
-        apiId: null
-        maxDepth: 2
-extensions:
-  amplify:
-    version: 3

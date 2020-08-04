@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { API, graphqlOperation, Auth, Hub } from "aws-amplify";
 import { listStrategys } from "./graphql/queries";
-import { withAuthenticator } from "@aws-amplify/ui-react";
+import {
+  withAuthenticator,
+  AmplifySignInButton,
+  AmplifyAuthenticator,
+} from "@aws-amplify/ui-react";
 import { AmplifySignOut, AmplifySignIn } from "@aws-amplify/ui-react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -26,7 +30,7 @@ import Copyright from "./components/Copyright";
 import SingleStrategyView from "./components/SingleStrategyView";
 import RecommendedView from "./components/RecommendedView";
 
-export const App = () => {
+const App = () => {
   const [savedStrategies, setSavedStrategies] = useState([]);
   const [loadedStrategy, setLoadedStrategy] = useState({
     loaded: false,
@@ -185,17 +189,9 @@ export const App = () => {
             >
               Crypto Strategy Analysis
             </Typography>
-            <AmplifySignIn />
+            {/* <AmplifySignIn /> */}
+            {/* <button onClick={() => Auth.federatedSignIn()}>Sign In</button> */}
             <AmplifySignOut />
-            <button
-              onClick={() =>
-                Auth.currentAuthenticatedUser()
-                  .then((user) => console.log({ user }))
-                  .catch((err) => console.log(err))
-              }
-            >
-              Check User
-            </button>
             Hi, {user}
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
