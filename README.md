@@ -5,6 +5,9 @@ Lifting state, hooks, props, JavaScript higher-order functions, JSX, Testing
 
 The application went through many... iterations of re-refactoring the whole codebase (that's what's great about learning technologies first hand!) as I understood more effective ways to implement different features.
 
+![Screenshot of the app dashboard](./screenshots/Screenshot-v1.png)
+
+
 # Intro
 
 This is started as an API project, to use the https://www.coindesk.com/coindesk-api API and generate useful insight for crypto coins.<br />
